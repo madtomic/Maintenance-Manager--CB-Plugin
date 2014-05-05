@@ -1,4 +1,4 @@
-![Logo] (http://image.noelshack.com/fichiers/2014/19/1399287455-maintenance.png)
+![Logo] (http://image.noelshack.com/fichiers/2014/19/1399305972-maintenance.png)
 ===========================
 
 (Please note this plugin is a very begin and a snapshot, please report me issues and suggest me things to add to make it better!)
