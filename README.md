@@ -28,9 +28,5 @@ This is my first plugin and I don't know very well Bukkit API for the moment but
 
 ##To do
 
-- Handle reload
 - Add colours to broadcasts
 - Improve the countdown broadcasts for scheduled maintenance.
-- Add a message when schedule or duration values are not int values instead of an ugly error message in console. 
-- Custom texts and motd
-- Custom image for maintenance mode
