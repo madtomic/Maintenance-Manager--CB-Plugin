@@ -32,8 +32,8 @@ This is my first plugin and I don't know very well Bukkit API for the moment but
 
 **/maintenance** is the main command. You'll have to add the following arguments:
 * on: turn on the maintenance mode
-    - <schedule in minutes> (optionnal)
-    - <duration of the maintenance in minutes> (optionnal)
+    - {schedule in minutes} (optionnal)
+    - {duration of the maintenance in minutes} (optionnal)
 * off: turn off the maintenance mode
 * reload: reload the plugin's config file
 
