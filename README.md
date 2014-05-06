@@ -18,6 +18,7 @@ This is my first plugin and I don't know very well Bukkit API for the moment but
 - Config file for custom texts ,broadcasts and motd.
 - Custom server icon for maintenance.
 - Server reload support.
+- Colors in texts
 - You can reload the config without restarting the server or reloading it entirely with /maintenance reload. 
 - Full permissions supported: 
 
@@ -66,6 +67,8 @@ maintenanceIcon: http://image.noelshack.com/fichiers/2014/19/1399387761-maintena
 Advice: If you don't want to change the icon, upload your original one and put the adress in the config file.
 
 **Important: If your server is running without icon, the one which is in the config file will be displayed even out of a maintenance!**
+
+To add colors to your texts, just put '§' and a character from 0-9 and a-f before the words you want to color. Please refer you to this page to know formatting codes: http://minecraft.gamepedia.com/Formatting_codes
 
 
 ##To do
