@@ -62,7 +62,9 @@ maintenanceIcon: http://image.noelshack.com/fichiers/2014/19/1399387761-maintena
 ```
 
 *Note: Your icon must be a 64X64 png image!*
+
 Advice: If you don't want to change the icon, upload your original one and put the adress in the config file.
+
 **Important: If your server is running without icon, the one which is in the config file will be displayed even out of a maintenance!**
 
 
