@@ -14,8 +14,8 @@ This is my first plugin and I don't know very well Bukkit API for the moment but
 - Maintenance schedule. Schedule your maintenance time and advert players with /maintenance on {time before maintenance time} (Optionnal, in minutes)
 - Define the duration of your maintenance with /maintenance on {time before maintenance time} <duration> (Optionnal, in minutes)
 - Kicks non-op players and players who don't have the permission to log-in during the maintenance.
-- Prevent non authorized players to log-in during maintenance.
-- Change the motd on the multi-player screen when the server is in maintenance.
+- Prevents non authorized players to log-in during maintenance.
+- Changes the motd on the multi-player screen when the server is in maintenance.
 - Commands can be casted from console or in-game.
 - Full permissions supported: 
 
