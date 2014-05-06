@@ -173,7 +173,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
         }
      
         @SuppressWarnings("static-access")
-		@Override
+	@Override
         public void run() {
         	try{
         		durationM = Integer.parseInt(durationArgument) * 60 * 1000;
