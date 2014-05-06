@@ -121,13 +121,13 @@ public final class Maintenance extends JavaPlugin implements Listener {
         		Bukkit.getServer().broadcastMessage( "Maintenance time in " + schedule + " minutes!");
         		scheduleM = Integer.parseInt(scheduleArgument) * 60 * 1000;
     		try {
-				t.sleep(scheduleM / 2);
+			t.sleep(scheduleM / 2);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
     		Bukkit.getServer().broadcastMessage( "Maintenance time in " + schedule / 2 + " minutes!");
     		try {
-				t.sleep(scheduleM / 2);
+			t.sleep(scheduleM / 2);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -178,7 +178,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
         	try{
         		durationM = Integer.parseInt(durationArgument) * 60 * 1000;
         	try {
-				t2.sleep(durationM);
+			t2.sleep(durationM);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
