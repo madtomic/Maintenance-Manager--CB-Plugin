@@ -1,6 +1,6 @@
-name: Maintenance
+name: MaintenanceManager
 main: io.github.jeremgamer.maintenance.Maintenance
-version: 0.0.1-SNAPSHOT
+version: 0.1
 commands:
    maintenance:
       description: Turn on or off the maintenance time. You can schedule the maintenance and its duration.
