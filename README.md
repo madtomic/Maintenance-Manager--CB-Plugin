@@ -1,8 +1,6 @@
 ![Logo] (http://image.noelshack.com/fichiers/2014/19/1399305972-maintenance.png)
 ===========================
 
-(Please note this plugin is a very begin and a snapshot, please report me issues and suggest me things to add to make it better!)
-
 Maintenance is a simple plugin which makes maintenances times on your server way more easier.
 
 This is my first plugin and I don't know very well Bukkit API for the moment but don't care, I'll make updates and improve the plugin!
@@ -17,6 +15,10 @@ This is my first plugin and I don't know very well Bukkit API for the moment but
 - Prevents non authorized players to log-in during maintenance.
 - Changes the motd on the multi-player screen when the server is in maintenance.
 - Commands can be casted from console or in-game.
+- Config file for custom texts ,broadcasts and motd.
+- Custom server icon for maintenance.
+- Server reload support.
+- You can reload the config without restarting the server or reloading it entirely with /maintenance reload. 
 - Full permissions supported: 
 
  maintenance.acess (give the permission to log-in during maintenance and to not being kicked when a maintenance begin)
