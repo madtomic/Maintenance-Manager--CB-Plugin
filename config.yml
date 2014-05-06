@@ -1,0 +1,9 @@
+maintenanceModeOnStart: false
+kickMessage: The server is currently under maintenance. Come back later.
+maintenanceMessage: The server is currently under maintenance. Come back later.
+maintenanceMOTD: Maintenance mode...
+maintenanceStart: Maintenance time!
+maintenanceEnd: Maintenance finished!
+inputErrorSchedule: The time value for schedule must be an integer!
+inputErrorDuration: The time value for duration must be an integer!
+maintenanceIcon: http://image.noelshack.com/fichiers/2014/19/1399387761-maintenancelogo.png
