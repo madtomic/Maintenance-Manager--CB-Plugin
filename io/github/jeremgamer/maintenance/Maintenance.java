@@ -105,7 +105,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     public class MaintenanceSchedule extends BukkitRunnable {
     	
         @SuppressWarnings("unused")
-		private final JavaPlugin plugin;
+	private final JavaPlugin plugin;
         private final CommandSender sender;
         
         public MaintenanceSchedule(JavaPlugin plugin, CommandSender sender) {
@@ -114,7 +114,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
         }
      
         @SuppressWarnings("static-access")
-		@Override
+	@Override
         public void run() {
         	try{
         		schedule = Integer.parseInt(scheduleArgument);
@@ -164,7 +164,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     public class MaintenanceDuration extends BukkitRunnable {
     	
         @SuppressWarnings("unused")
-		private final JavaPlugin plugin;
+	private final JavaPlugin plugin;
         private final CommandSender sender;
         
         public MaintenanceDuration(JavaPlugin plugin, CommandSender sender) {
