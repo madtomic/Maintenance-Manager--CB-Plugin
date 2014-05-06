@@ -73,5 +73,4 @@ To add colors to your texts, just put '§' and a character from 0-9 and a-f befo
 
 ##To do
 
-- Add colours to broadcasts
 - Improve the countdown broadcasts for scheduled maintenance.
