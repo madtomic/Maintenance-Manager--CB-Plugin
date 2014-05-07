@@ -20,13 +20,7 @@ This is my first plugin and I don't know very well Bukkit API for the moment but
 - Server reload support.
 - Colors in texts
 - You can reload the config without restarting the server or reloading it entirely with /maintenance reload. 
-- Full permissions supported: 
-
- maintenance.acess (give the permission to log-in during maintenance and to not being kicked when a maintenance begin)
- 
- maintenance.maintenance (allow to start or stop a maintenance)
- 
- OP players have these permissions 
+- Full permissions supported.
  
 
 ##Commands:
@@ -74,3 +68,9 @@ To add colors to your texts, just put '§' and a character from 0-9 and a-f befo
 ##To do
 
 - Improve the countdown broadcasts for scheduled maintenance.
+* Add permission and message for /maintenance reload.
+* Change the number of available slots during a maintenance.
+* Custom message for schedule.
+* Disable or enable other plugins.
+* Recurrent maintenances.
+* Commands to check CPU and RAM usage.
