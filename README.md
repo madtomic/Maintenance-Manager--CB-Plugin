@@ -47,15 +47,25 @@ Of course, OP players have these permissions.
 By default, the config file looks like this:
 
 ```
-maintenanceModeOnStart: false //This line updates when a maintenance is launched (reload support)
-kickMessage: The server is currently under maintenance. Come back later. //This message is displayed when a player is kicked by MaintenanceManager.
-maintenanceMessage: The server is currently under maintenance. Come back later. //When a player who hasn't got the permission attempt to log in the server, this message would be displayed.
-maintenanceMOTD: Maintenance mode... //The motd of your server when running in maintenance mode.
-maintenanceStart: Maintenance time! //The announcement of the begin of a maintenance.
-maintenanceEnd: Maintenance finished! //The announcement of the end of a maintenance.
-inputErrorSchedule: The time value for schedule must be an integer! //Error message for invalid argument
-inputErrorDuration: The time value for duration must be an integer! //Error message for invalid argument
-maintenanceIcon: http://image.noelshack.com/fichiers/2014/19/1399387761-maintenancelogo.png //Put here the adress your the custom icon for maintenance mode.
+maintenanceModeOnStart: false
+kickMessage: The server is currently under maintenance. Come back later.
+maintenanceMessage: The server is currently under maintenance. Come back later.
+maintenanceMOTD: Maintenance mode...
+maintenanceStart: Maintenance time!
+maintenanceEnd: Maintenance finished!
+scheduleMessageBegin: Maintenance in
+scheduleMessageEnd: minutes!
+scheduleLessThanOneMinute: Maintenance in less than one minute!
+inputErrorSchedule: The time value for schedule must be an integer!
+inputErrorDuration: The time value for duration must be an integer!
+pluginManagementArgumentErrorDisable: Please name the plugin you want to disable!
+pluginManagementArgumentErrorEnable: Please name the plugin you want to enable!
+pluginDisabled: successfully disabled!
+pluginEnabled: successfully enabled!
+maintenanceAlreadyLaunched: The server is already in maintenance mode.
+noMaintenanceLaunched: Maintenance mode is already off.
+maxPlayersOnMaintenance: 10
+maintenanceIcon: http://image.noelshack.com/fichiers/2014/19/1399387761-maintenancelogo.png
 ```
 
 *Note: Your icon must be a 64X64 png image! Protected adresses (https://) may not work!*
