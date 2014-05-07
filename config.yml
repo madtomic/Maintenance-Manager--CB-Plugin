@@ -4,6 +4,16 @@ maintenanceMessage: The server is currently under maintenance. Come back later.
 maintenanceMOTD: Maintenance mode...
 maintenanceStart: Maintenance time!
 maintenanceEnd: Maintenance finished!
+scheduleMessageBegin: Maintenance in
+scheduleMessageEnd: minutes!
+scheduleLessThanOneMinute: Maintenance in less than one minute!
 inputErrorSchedule: The time value for schedule must be an integer!
 inputErrorDuration: The time value for duration must be an integer!
+pluginManagementArgumentErrorDisable: Please name the plugin you want to disable!
+pluginManagementArgumentErrorEnable: Please name the plugin you want to enable!
+pluginDisabled: successfully disabled!
+pluginEnabled: successfully enabled!
+maintenanceAlreadyLaunched: The server is already in maintenance mode.
+noMaintenanceLaunched: Maintenance mode is already off.
+maxPlayersOnMaintenance: 10
 maintenanceIcon: http://image.noelshack.com/fichiers/2014/19/1399387761-maintenancelogo.png
