@@ -18,10 +18,12 @@ I want to make it the best maintenance plugin for Bukkit so I'll do the maximum 
 - Config file for custom texts ,broadcasts and motd.
 - Custom server icon for maintenance.
 - Server reload support.
-- Colors in texts
+- Colors in texts.
 - You can reload the config without restarting the server or reloading it entirely with /maintenance reload. 
 - Full permissions supported.
- 
+- Full texts customization.
+- You can choose the number of slots available during a maintenance.
+- Manage your plugins in real-time without having to reload or restart the server with /maintenance [enable|disable] (plugin name)
 
 ##Commands:
 
@@ -31,6 +33,9 @@ I want to make it the best maintenance plugin for Bukkit so I'll do the maximum 
     - {duration of the maintenance in minutes} (optionnal)
 * off: turn off the maintenance mode
 * reload: reload the plugin's config file
+* enable {plugin name}: enable the selected plugin.
+* disable {plugin name}: disable the selected plugin.
+**Note: If you are not sure about the plugin name, type /plugins.**
 
 
 ##Permissions:
@@ -38,6 +43,10 @@ I want to make it the best maintenance plugin for Bukkit so I'll do the maximum 
 maintenance.maintenance: Allows to start or stop a maintenance.
 
 maintenance.access: Allows to enter the server during maintenance mode (and don't be kicked when the maintenance begin)
+
+maintenance.reload: Allows to reload the config file.
+
+maintenance.manage.plugins: Allows to disable or enable plugins.
 
 Of course, OP players have these permissions.
 
@@ -47,25 +56,25 @@ Of course, OP players have these permissions.
 By default, the config file looks like this:
 
 ```
-maintenanceModeOnStart: false
-kickMessage: The server is currently under maintenance. Come back later.
-maintenanceMessage: The server is currently under maintenance. Come back later.
-maintenanceMOTD: Maintenance mode...
-maintenanceStart: Maintenance time!
-maintenanceEnd: Maintenance finished!
-scheduleMessageBegin: Maintenance in
-scheduleMessageEnd: minutes!
-scheduleLessThanOneMinute: Maintenance in less than one minute!
-inputErrorSchedule: The time value for schedule must be an integer!
-inputErrorDuration: The time value for duration must be an integer!
-pluginManagementArgumentErrorDisable: Please name the plugin you want to disable!
-pluginManagementArgumentErrorEnable: Please name the plugin you want to enable!
-pluginDisabled: successfully disabled!
-pluginEnabled: successfully enabled!
-maintenanceAlreadyLaunched: The server is already in maintenance mode.
-noMaintenanceLaunched: Maintenance mode is already off.
-maxPlayersOnMaintenance: 10
-maintenanceIcon: http://image.noelshack.com/fichiers/2014/19/1399387761-maintenancelogo.png
+maintenanceModeOnStart: false //This line is mainly for total reload support
+kickMessage: The server is currently under maintenance. Come back later. //Displayed to players kicked by MaintenanceManager.
+maintenanceMessage: The server is currently under maintenance. Come back later. //Displayed to players who attempt to connect during a maintenance and who havn't the permission to connect.
+maintenanceMOTD: Maintenance mode... //The motd displayed on the multiplayer screen during a maintenance.
+maintenanceStart: Maintenance time! //Broadcast displayed at the beginning of a maintenance.
+maintenanceEnd: Maintenance finished! //Broadcast displayed at the end of a maintenance.
+scheduleMessageBegin: Maintenance in //The begin of the schedule message, the time value follows in the code...
+scheduleMessageEnd: minutes! //The end of the schedule message.
+scheduleLessThanOneMinute: Maintenance in less than one minute! //Schedule message when the maintenance will begin in less than one minute
+inputErrorSchedule: The time value for schedule must be an integer! //Error message for wrong input
+inputErrorDuration: The time value for duration must be an integer! //Error message for wrong input
+pluginManagementArgumentErrorDisable: Please name the plugin you want to disable! //Error message for wrong input
+pluginManagementArgumentErrorEnable: Please name the plugin you want to enable! //Error message for wrong input
+pluginDisabled: successfully disabled! //Displayed when you disable a plugin. The plugin name will be just before it, no space needed.
+pluginEnabled: successfully enabled! //Displayed when you enable a plugin. The plugin name will be just before it, no space needed.
+maintenanceAlreadyLaunched: The server is already in maintenance mode. //Displayed when /maintenance on is performed during a maintenance.
+noMaintenanceLaunched: Maintenance mode is already off. //Displayed when /maintenance off is performed when the maintenance mode is off.
+maxPlayersOnMaintenance: 10 //Must be an integer! The number of slots available during a maintenance
+maintenanceIcon: http://image.noelshack.com/fichiers/2014/19/1399387761-maintenancelogo.png //Check the adress two times before loading the config!
 ```
 
 *Note: Your icon must be a 64X64 png image! Protected adresses (https://) may not work!*
@@ -79,13 +88,6 @@ To add colors to your texts, just put '§' and a character from 0-9 and a-f befo
 
 ##To do
 
-* Improve the countdown broadcasts for scheduled maintenance.
-* Add permission and message for /maintenance reload.
-* Change the number of available slots during a maintenance.
-* Custom message for schedule.
-* Disable or enable other plugins.
+* Fix the config.yml issue.
 * Recurrent maintenances.
-* Add a message on /command reload
 * Schedule interruption
-* Need improves on /command [on|off]
-* Improve plugin.yml
