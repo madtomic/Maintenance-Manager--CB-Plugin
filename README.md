@@ -3,7 +3,7 @@
 
 Maintenance is a simple plugin which makes maintenances times on your server way more easier.
 
-This is my first plugin and I don't know very well Bukkit API for the moment but don't care, I'll make updates and improve the plugin!
+I want to make it the best maintenance plugin for Bukkit so I'll do the maximum of myself to make frequent updates and add a maximum of stable features.
 
 
 ##Features:
@@ -56,7 +56,7 @@ inputErrorDuration: The time value for duration must be an integer! //Error mess
 maintenanceIcon: http://image.noelshack.com/fichiers/2014/19/1399387761-maintenancelogo.png //Put here the adress your the custom icon for maintenance mode.
 ```
 
-*Note: Your icon must be a 64X64 png image!*
+*Note: Your icon must be a 64X64 png image! Protected adresses (https://) may not work!*
 
 Advice: If you don't want to change the icon, upload your original one and put the adress in the config file.
 
@@ -67,9 +67,13 @@ To add colors to your texts, just put '§' and a character from 0-9 and a-f befo
 
 ##To do
 
-- Improve the countdown broadcasts for scheduled maintenance.
+* Improve the countdown broadcasts for scheduled maintenance.
 * Add permission and message for /maintenance reload.
 * Change the number of available slots during a maintenance.
 * Custom message for schedule.
 * Disable or enable other plugins.
 * Recurrent maintenances.
+* Add a message on /command reload
+* Schedule interruption
+* Need improves on /command [on|off]
+* Improve plugin.yml
