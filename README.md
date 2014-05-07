@@ -73,4 +73,3 @@ To add colors to your texts, just put '§' and a character from 0-9 and a-f befo
 * Custom message for schedule.
 * Disable or enable other plugins.
 * Recurrent maintenances.
-* Commands to check CPU and RAM usage.
