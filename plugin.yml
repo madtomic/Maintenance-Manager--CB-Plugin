@@ -1,10 +1,10 @@
 name: MaintenanceManager
 main: io.github.jeremgamer.maintenance.Maintenance
-version: 0.1
+version: 0.2
 commands:
    maintenance:
-      description: Turn on or off the maintenance time. You can schedule the maintenance and its duration.
-      usage: /maintenance [on|off] (schedule in minutes) <duration in minutes>
-      permission: maintenance.maintenance
+      description: All commands from MaintenanceManager
+      usage: /maintenance [on|off|reload|enable|disable] (schedule in minutes|plugin name) <duration in minutes>
+      permission: maintenance.*
       permission-message: You are not allowed to do that.
 
