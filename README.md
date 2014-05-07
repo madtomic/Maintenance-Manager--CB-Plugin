@@ -36,7 +36,9 @@ I want to make it the best maintenance plugin for Bukkit so I'll do the maximum 
 ##Permissions:
 
 maintenance.maintenance: Allows to start or stop a maintenance.
+
 maintenance.access: Allows to enter the server during maintenance mode (and don't be kicked when the maintenance begin)
+
 Of course, OP players have these permissions.
 
 
