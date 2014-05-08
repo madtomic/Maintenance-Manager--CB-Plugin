@@ -1,7 +1,7 @@
 ![Logo] (http://image.noelshack.com/fichiers/2014/19/1399305972-maintenance.png)
 ===========================
 
-Maintenance is a simple plugin which makes maintenances times on your server way more easier.
+**Maintenance Manager is the ultimate maintenance plugin which makes maintenances times on your server way easier!**
 
 I want to make it the best maintenance plugin for Bukkit so I'll do the maximum of myself to make frequent updates and add a maximum of stable features.
 
