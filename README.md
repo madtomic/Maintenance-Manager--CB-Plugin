@@ -91,3 +91,4 @@ To add colors to your texts, just put '§' and a character from 0-9 and a-f befo
 * Fix the config.yml issue.
 * Recurrent maintenances.
 * Schedule interruption
+* Countdown in motd when the duration is planned.
