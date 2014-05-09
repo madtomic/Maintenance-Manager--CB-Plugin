@@ -1,11 +1,17 @@
 maintenanceModeOnStart: false
+remainingMilliseconds: 0
 kickMessage: The server is currently under maintenance. Come back later.
 maintenanceMessage: The server is currently under maintenance. Come back later.
 maintenanceMOTD: Maintenance mode...
+maintenanceWithDurationMOTDBegin: Maintenance mode...
+maintenanceWithDurationMOTDEnd: minutes remaining!
+maintenanceWithDurationMOTDLessThanOneMinute: Less than one minute remaining!
 maintenanceStart: Maintenance time!
 maintenanceEnd: Maintenance finished!
 scheduleMessageBegin: Maintenance in
 scheduleMessageEnd: minutes!
+scheduleCanceled: The scheduled maintenance have been canceled!
+noMaintenanceScheduled: No maintenance scheduled...
 scheduleLessThanOneMinute: Maintenance in less than one minute!
 inputErrorSchedule: The time value for schedule must be an integer!
 inputErrorDuration: The time value for duration must be an integer!
