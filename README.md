@@ -106,6 +106,6 @@ To add colors to your texts, just put '§' and a character from 0-9 and a-f befo
 
 If you really enjoy this plugin and you want to reward me for my work, please donate! I would be very grateful!
 
-**![Donate!] (https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=99FBSV9DP5JCL&lc=US&item_name=JEREMSPEED&item_number=MaintenanceManager&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)**
+**![Donate!] (https://www.paypal.com/us/cgi-bin/webscr?cmd=_flow&SESSION=ZI1ZtpijCRPUh7bvuX2c3VOFGPcx1-ppiMVE55axi1De2u3UIr7HDmos3D4&dispatch=5885d80a13c0db1f8e263663d3faee8db315373d882600b51a5edf961ea39639)**
 
 
