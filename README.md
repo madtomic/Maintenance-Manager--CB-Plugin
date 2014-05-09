@@ -22,7 +22,7 @@ I want to make it the best maintenance plugin for Bukkit so I'll do the maximum 
 - Full permissions supported.
 - Full texts customization.
 - You can choose the number of slots available during a maintenance.
-- Manage your plugins in real-time without having to reload or restart the server with /maintenance [enable|disable] (plugin name)
+- Manage your plugins in real-time without having to reload or restart the server with /maintenance [enable|disable] (plugin name). Disabled plugins stay disabled after restart or reload until you re-enable it. 
 - Countdown in motd when a maintenance has a duration planned. 
 
 ##Commands:
@@ -84,6 +84,7 @@ maintenanceAlreadyLaunched: The server is already in maintenance mode. //Display
 noMaintenanceLaunched: Maintenance mode is already off. //Displayed when /maintenance off is performed when the maintenance mode is off.
 maxPlayersOnMaintenance: 10 //Must be an integer! The number of slots available during a maintenance
 maintenanceIcon: http://image.noelshack.com/fichiers/2014/19/1399387761-maintenancelogo.png //Check the adress two times before loading the config!
+disabledPlugins: [] //Take care when you modify the list!
 ```
 
 *Note: Your icon must be a 64X64 png image! Protected adresses (https://) may not work!*
@@ -98,5 +99,4 @@ To add colors to your texts, just put '§' and a character from 0-9 and a-f befo
 ##To do
 
 * Reccurent maintenances.
-* Disabled plugins stay disabled after reload or restart.
 * Your suggestions. 
