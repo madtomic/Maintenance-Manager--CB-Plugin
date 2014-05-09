@@ -59,7 +59,7 @@ Of course, OP players have these permissions.
 By default, the config file looks like this:
 
 ```
-maintenanceModeOnStart: false //This line is mainly for total reload support
+maintenanceModeOnStart: false //Don't touch this line!
 remainingMilliseconds: 0 //Don't touch this line!
 kickMessage: The server is currently under maintenance. Come back later. //Displayed to players kicked by MaintenanceManager.
 maintenanceMessage: The server is currently under maintenance. Come back later. //Displayed to players who attempt to connect during a maintenance and who havn't the permission to connect.
