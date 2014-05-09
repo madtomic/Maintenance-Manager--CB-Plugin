@@ -98,4 +98,5 @@ To add colors to your texts, just put '§' and a character from 0-9 and a-f befo
 ##To do
 
 * Reccurent maintenances.
+* Disabled plugins stay disabled after reload or restart.
 * Your suggestions. 
