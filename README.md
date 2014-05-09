@@ -9,21 +9,21 @@ I want to make it the best maintenance plugin for Bukkit so I'll do the maximum 
 ##Features:
 
 - /maintenance command manages the maintenance time: /maintenance on|off
-- Maintenance schedule. Schedule your maintenance time and advert players with /maintenance on {time before maintenance time} (Optionnal, in minutes)
-- Define the duration of your maintenance with /maintenance on {time before maintenance time} <duration> (Optionnal, in minutes)
+- Maintenance schedule. Schedule your maintenance time and advert players with /maintenance on [time before maintenance time] (Optionnal, in minutes)
+- Schedule interruption with /maintenance cancel.
+- Define the duration of your maintenance with /maintenance on [time before maintenance time] <duration> (Optionnal, in minutes)
 - Kicks non-op players and players who don't have the permission to log-in during the maintenance.
 - Prevents non authorized players to log-in during maintenance.
 - Changes the motd on the multi-player screen when the server is in maintenance.
 - Commands can be casted from console or in-game.
-- Config file for custom texts ,broadcasts and motd.
 - Custom server icon for maintenance.
 - Server reload support.
-- Colors in texts.
-- You can reload the config without restarting the server or reloading it entirely with /maintenance reload. 
+- You can reload the config without restarting the server or reloading it entirely with /maintenance reload.
 - Full permissions supported.
 - Full texts customization.
 - You can choose the number of slots available during a maintenance.
 - Manage your plugins in real-time without having to reload or restart the server with /maintenance [enable|disable] (plugin name)
+- Countdown in motd when a maintenance has a duration planned. 
 
 ##Commands:
 
@@ -31,6 +31,7 @@ I want to make it the best maintenance plugin for Bukkit so I'll do the maximum 
 * on: turn on the maintenance mode
     - {schedule in minutes} (optionnal)
     - {duration of the maintenance in minutes} (optionnal)
+* cancel: cancels a scheduled maintenance. 
 * off: turn off the maintenance mode
 * reload: reload the plugin's config file
 * enable {plugin name}: enable the selected plugin.
@@ -41,6 +42,8 @@ I want to make it the best maintenance plugin for Bukkit so I'll do the maximum 
 ##Permissions:
 
 maintenance.maintenance: Allows to start or stop a maintenance.
+
+maintenance.maintenance.cancel: Allows to cancel a scheduled maintenance.
 
 maintenance.access: Allows to enter the server during maintenance mode (and don't be kicked when the maintenance begin)
 
@@ -57,13 +60,19 @@ By default, the config file looks like this:
 
 ```
 maintenanceModeOnStart: false //This line is mainly for total reload support
+remainingMilliseconds: 0 //Don't touch this line!
 kickMessage: The server is currently under maintenance. Come back later. //Displayed to players kicked by MaintenanceManager.
 maintenanceMessage: The server is currently under maintenance. Come back later. //Displayed to players who attempt to connect during a maintenance and who havn't the permission to connect.
 maintenanceMOTD: Maintenance mode... //The motd displayed on the multiplayer screen during a maintenance.
+maintenanceWithDurationMOTDBegin: Maintenance mode... //The first line of the motd when the maintenance has a duration planned
+maintenanceWithDurationMOTDEnd: minutes remaining!  //The second line of the motd when the maintenance has a duration planned. Follows the number of minutes remaining.
+maintenanceWithDurationMOTDLessThanOneMinute: Less than one minute remaining! //The second line of the motd when the maintenance has a duration planned and there is less than one minute remaining.
 maintenanceStart: Maintenance time! //Broadcast displayed at the beginning of a maintenance.
 maintenanceEnd: Maintenance finished! //Broadcast displayed at the end of a maintenance.
 scheduleMessageBegin: Maintenance in //The begin of the schedule message, the time value follows in the code...
 scheduleMessageEnd: minutes! //The end of the schedule message.
+scheduleCanceled: The scheduled maintenance have been canceled! //Displays in a broadcast when a maintenance is canceled.
+noMaintenanceScheduled: No maintenance scheduled... //Displays when /maintenance cancel is performed while no maintenance is scheduled.
 scheduleLessThanOneMinute: Maintenance in less than one minute! //Schedule message when the maintenance will begin in less than one minute
 inputErrorSchedule: The time value for schedule must be an integer! //Error message for wrong input
 inputErrorDuration: The time value for duration must be an integer! //Error message for wrong input
@@ -88,7 +97,15 @@ To add colors to your texts, just put '§' and a character from 0-9 and a-f befo
 
 ##To do
 
-* Fix the config.yml issue.
-* Recurrent maintenances.
-* Schedule interruption
-* Countdown in motd when the duration is planned.
+* Reccurent maintenances.
+* Your suggestions. 
+
+
+##Donate!
+
+
+If you really enjoy this plugin and you want to reward me for my work, please donate! I would be very grateful!
+
+**![Donate!] (https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=99FBSV9DP5JCL&lc=US&item_name=JEREMSPEED&item_number=MaintenanceManager&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)**
+
+
