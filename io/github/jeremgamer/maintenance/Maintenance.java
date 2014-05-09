@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -34,6 +35,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     String durationArgument;
     private Thread t;
     private Thread t2;
+    private Thread t3;
     String pluginName;
     Plugin plugin;
     int maxPlayer;
@@ -42,6 +44,9 @@ public final class Maintenance extends JavaPlugin implements Listener {
     boolean durationEnabled = false;
     int remainingMilliseconds;
     boolean scheduleEnabled = false;
+    List<String> disabledPlugins;
+    Plugin pluginToDisable;
+
 
     
     @Override
@@ -58,6 +63,12 @@ public final class Maintenance extends JavaPlugin implements Listener {
     		durationEnabled = true;
 			t2 = new Thread(new MaintenanceDuration(this, null));
     		t2.start();
+    	}
+    	
+    	disabledPlugins = getConfig().getStringList("disabledPlugins");
+    	if ( !disabledPlugins.isEmpty() ) {
+			t3 = new Thread(new disablingPluginsOnStart(this));
+    		t3.start();
     	}
     }
  
@@ -147,6 +158,9 @@ public final class Maintenance extends JavaPlugin implements Listener {
     					pluginName = args[1];
     					plugin = pm.getPlugin(pluginName);
     					pm.disablePlugin(plugin);
+    					disabledPlugins.add(pluginName);
+    					getConfig().set("disabledPlugins", disabledPlugins);
+            			saveConfig();
     					pluginName = pluginName + " ";
     					sender.sendMessage( ChatColor.GOLD + "§l" + pluginName + ChatColor.RESET + getConfig().getString("pluginDisabled") );
     				} else {
@@ -158,6 +172,9 @@ public final class Maintenance extends JavaPlugin implements Listener {
     					pluginName = args[1];
     					plugin = pm.getPlugin(pluginName);
     					pm.enablePlugin(plugin);
+    					disabledPlugins.remove(pluginName);
+    					getConfig().set("disabledPlugins", disabledPlugins);
+            			saveConfig();
     					pluginName = pluginName + " ";
     					sender.sendMessage( ChatColor.GOLD +  "§l" + pluginName + ChatColor.RESET + getConfig().getString("pluginEnabled") );
     				} else {
@@ -194,7 +211,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     public class MaintenanceSchedule extends BukkitRunnable {
     	
         @SuppressWarnings("unused")
-		private final JavaPlugin plugin;
+	private final JavaPlugin plugin;
         private final CommandSender sender;
         
         public MaintenanceSchedule(JavaPlugin plugin, CommandSender sender) {
@@ -203,7 +220,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
         }
      
         @SuppressWarnings("static-access")
-		@Override
+	@Override
         public void run() {
         	scheduleMessageBegin = getConfig().getString("scheduleMessageBegin") + " ";
         	scheduleMessageEnd =  " " + getConfig().getString("scheduleMessageEnd");
@@ -285,7 +302,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     public class MaintenanceDuration extends BukkitRunnable {
     	
         @SuppressWarnings("unused")
-		private final JavaPlugin plugin;
+	private final JavaPlugin plugin;
         private final CommandSender sender;
         
         public MaintenanceDuration(JavaPlugin plugin, CommandSender sender) {
@@ -294,7 +311,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
         }
      
         @SuppressWarnings("static-access")
-		@Override
+	@Override
         public void run() {
         	try{        		
         		for ( int i = remainingMilliseconds ; i >= 0 ; i--) {
@@ -319,5 +336,33 @@ public final class Maintenance extends JavaPlugin implements Listener {
     			sender.sendMessage( getConfig().getString("inputErrorDuration") );
         	}
         }
+    }
+    
+    public class disablingPluginsOnStart extends BukkitRunnable {
+
+		@SuppressWarnings("unused")
+		private final Plugin plugin;
+    	
+        public disablingPluginsOnStart(JavaPlugin plugin) {
+            this.plugin = plugin;
+        }
+    	
+		@SuppressWarnings("static-access")
+		@Override
+		public void run() {
+			try {
+				t3.sleep(2000);
+				getLogger().info("Disabling the selected plugins...");
+		    	for ( String name : disabledPlugins ) {
+					pluginToDisable = pm.getPlugin(name);
+					pm.disablePlugin(pluginToDisable);
+		    	}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (NullPointerException e1) {
+				getLogger().severe( "No plugin named " + pluginToDisable + " to disable!" );
+			}
+		}
+    	
     }
 }
