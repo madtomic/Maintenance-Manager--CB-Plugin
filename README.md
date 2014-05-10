@@ -100,4 +100,5 @@ To add colors to your texts, just put '§' and a character from 0-9 and a-f befo
 
 * Reccurent maintenances.
 * Backups.
+* Commands to get CPU and RAM usage.
 * Your suggestions. 
