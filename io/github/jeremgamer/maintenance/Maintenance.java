@@ -411,7 +411,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
 				while (!smokeAnswer.exists()) {
 					t4.sleep(1);
 					if (smokeAnswer.exists()) {
-						t4.sleep(650);
+						t4.sleep(1000);
 					}
 				}
 				String answer = " " + sd.getInfo();
@@ -439,12 +439,13 @@ public final class Maintenance extends JavaPlugin implements Listener {
 		@Override
 		public void run() {
     		try {
+    			long sleep = getConfig().getLong("waitTime");
     			File smokeAnswer = new File( plugin.getDataFolder() + "/smokeAnswer.yml" );
 				sd.sendRequest("ram");
 				while (!smokeAnswer.exists()) {
 					t5.sleep(1);
 					if (smokeAnswer.exists()) {
-						t4.sleep(650);
+						t4.sleep(sleep);
 					}
 				}
 				String answer = " " + sd.getInfo();
@@ -453,7 +454,10 @@ public final class Maintenance extends JavaPlugin implements Listener {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
 			}
+			
 		}
     	
     }
