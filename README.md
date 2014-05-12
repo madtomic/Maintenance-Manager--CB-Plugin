@@ -24,6 +24,7 @@ I want to make it the best maintenance plugin for Bukkit so I'll do the maximum 
 - You can choose the number of slots available during a maintenance.
 - Manage your plugins in real-time without having to reload or restart the server with /maintenance [enable|disable] (plugin name). Disabled plugins stay disabled after restart or reload until you re-enable it. 
 - Countdown in motd when a maintenance has a duration planned. 
+- Check the server hardware at any time with /cpu and /ram! 
 
 ##Commands:
 
@@ -38,6 +39,9 @@ I want to make it the best maintenance plugin for Bukkit so I'll do the maximum 
 * disable {plugin name}: disable the selected plugin.
 **Note: If you are not sure about the plugin name, type /plugins.**
 
+**/cpu**: Returns the current use of the server's CPU in percent.
+
+**/ram**: Returns the current use of the server's RAM in percent and the current amount of MB used. Note: These two commands take a little time to perform because it requires to run external native code. Works only with Windows, Linux and MacOS.
 
 ##Permissions:
 
@@ -50,6 +54,10 @@ maintenance.access: Allows to enter the server during maintenance mode (and don'
 maintenance.reload: Allows to reload the config file.
 
 maintenance.manage.plugins: Allows to disable or enable plugins.
+
+maintenance.cpu: Allows to perform /cpu command.
+
+maintenance.ram: Allows to perform /ram command.
 
 Of course, OP players have these permissions.
 
@@ -82,6 +90,8 @@ pluginDisabled: successfully disabled! //Displayed when you disable a plugin. Th
 pluginEnabled: successfully enabled! //Displayed when you enable a plugin. The plugin name will be just before it, no space needed.
 maintenanceAlreadyLaunched: The server is already in maintenance mode. //Displayed when /maintenance on is performed during a maintenance.
 noMaintenanceLaunched: Maintenance mode is already off. //Displayed when /maintenance off is performed when the maintenance mode is off.
+cpuUsage: CPU used at //Followed by the CPU usage percentage.
+ramUsage: RAM used at //Followed by the RAM usage. (Format: "x% || yMB")
 maxPlayersOnMaintenance: 10 //Must be an integer! The number of slots available during a maintenance
 maintenanceIcon: http://image.noelshack.com/fichiers/2014/19/1399387761-maintenancelogo.png //Check the adress two times before loading the config!
 disabledPlugins: [] //Take care when you modify the list!
@@ -100,5 +110,4 @@ To add colors to your texts, just put '§' and a character from 0-9 and a-f befo
 
 * Reccurent maintenances.
 * Backups.
-* Commands to get CPU and RAM usage.
 * Your suggestions. 
