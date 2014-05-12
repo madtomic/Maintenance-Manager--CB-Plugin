@@ -106,6 +106,14 @@ Advice: If you don't want to change the icon, upload your original one and put t
 
 To add colors to your texts, just put '§' and a character from 0-9 and a-f before the words you want to color. Please refer you to this page to know formatting codes: http://minecraft.gamepedia.com/Formatting_codes
 
+##Setup
+
+To set up Maintenance Manager, simply download the jar file and put it into "plugins" folder.
+Run your server and enjoy!
+
+**Important: Please read carefully the instructions below...**
+
+Run the server for the first time with MaintenanceManager and then try /cpu command. If it returns null ("CPU used at null%", highly probable), go to the config.yml and go to the section named "waitTime". The default value is 650 (milliseconds). Increase this value until the /cpu and /ram commands work properly. Caution, the value must be an integer!
 
 ##To do
 
