@@ -92,6 +92,7 @@ maintenanceAlreadyLaunched: The server is already in maintenance mode. //Display
 noMaintenanceLaunched: Maintenance mode is already off. //Displayed when /maintenance off is performed when the maintenance mode is off.
 cpuUsage: CPU used at //Followed by the CPU usage percentage.
 ramUsage: RAM used at //Followed by the RAM usage. (Format: "x% || yMB")
+waitTime: 650 //THIS LINE IS VERY IMPORTANT! It must be an integer. Defines the time the plugin will wait before answering /cpu and /ram. If the command return null, please increase this value. DO NOT DECREASE IT!
 maxPlayersOnMaintenance: 10 //Must be an integer! The number of slots available during a maintenance
 maintenanceIcon: http://image.noelshack.com/fichiers/2014/19/1399387761-maintenancelogo.png //Check the adress two times before loading the config!
 disabledPlugins: [] //Take care when you modify the list!
