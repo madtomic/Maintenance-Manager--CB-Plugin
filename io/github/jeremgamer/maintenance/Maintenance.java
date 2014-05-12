@@ -36,6 +36,8 @@ public final class Maintenance extends JavaPlugin implements Listener {
     private Thread t;
     private Thread t2;
     private Thread t3;
+    private Thread t4;
+    private Thread t5;
     String pluginName;
     Plugin plugin;
     int maxPlayer;
@@ -46,10 +48,11 @@ public final class Maintenance extends JavaPlugin implements Listener {
     boolean scheduleEnabled = false;
     List<String> disabledPlugins;
     Plugin pluginToDisable;
+    SmokeDetector sd = new SmokeDetector(this);
 
-
-    
-    @Override
+   
+    @SuppressWarnings("static-access")
+	@Override
     public void onEnable() {
     	getServer().getPluginManager().registerEvents(this, this);
     	File configFile = new File(this.getDataFolder(), "config.yml");
@@ -70,6 +73,12 @@ public final class Maintenance extends JavaPlugin implements Listener {
 			t3 = new Thread(new disablingPluginsOnStart(this));
     		t3.start();
     	}
+    	
+    	try {
+			sd.loadLibraries();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
  
 
@@ -107,19 +116,13 @@ public final class Maintenance extends JavaPlugin implements Listener {
     					scheduleArgument = args[1];
     					scheduleEnabled = true;
     					t = new Thread(new MaintenanceSchedule(this, sender));
-    					t.start(); 
+    					t2 = new Thread(new MaintenanceDuration(this, sender));
+    					t.start();
     					try {
     						remainingMilliseconds = Integer.parseInt(args[2]) * 60 * 1000;
     					} catch (NumberFormatException e){
     						sender.sendMessage( getConfig().getString("inputErrorDuration") );
     					}
-    					durationEnabled = true;
-    					maintenanceTime = true;
-    					this.getConfig().set("maintenanceModeOnStart", true);
-    					saveConfig();
-    					Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceStart") );
-    					t2 = new Thread(new MaintenanceDuration(this, sender));
-    					t2.start();
     					return true;
     				}
     				for (Player player: Bukkit.getServer().getOnlinePlayers()) {
@@ -191,7 +194,19 @@ public final class Maintenance extends JavaPlugin implements Listener {
     				}
     				return true;
     			}
-    		}    	
+    		}
+    	
+    	if (cmd.getName().equalsIgnoreCase( "cpu" ) && sender.hasPermission("maintenance.cpu")) { 
+			t4 = new Thread(new cpuCommand(this, sender));
+			t4.start();
+    		return true;
+    	}
+    	
+    	if (cmd.getName().equalsIgnoreCase( "ram" ) && sender.hasPermission("maintenance.ram")) { 
+    		t5 = new Thread(new ramCommand(this , sender));
+    		t5.start();
+    		return true;
+    	}
 			return false;
     }
     
@@ -211,7 +226,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     public class MaintenanceSchedule extends BukkitRunnable {
     	
         @SuppressWarnings("unused")
-	private final JavaPlugin plugin;
+		private final JavaPlugin plugin;
         private final CommandSender sender;
         
         public MaintenanceSchedule(JavaPlugin plugin, CommandSender sender) {
@@ -220,7 +235,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
         }
      
         @SuppressWarnings("static-access")
-	@Override
+		@Override
         public void run() {
         	scheduleMessageBegin = getConfig().getString("scheduleMessageBegin") + " ";
         	scheduleMessageEnd =  " " + getConfig().getString("scheduleMessageEnd");
@@ -246,9 +261,20 @@ public final class Maintenance extends JavaPlugin implements Listener {
             			getConfig().set("maintenanceModeOnStart", true);
             			saveConfig();
             			Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceStart") );
+    					t2.start();
+    					durationEnabled = true;
+    					maintenanceTime = true;
+    					getConfig().set("maintenanceModeOnStart", true);
+    					saveConfig();
         			} catch (InterruptedException e) {
         				t.interrupt();
-        			}
+        			}        			
+        	} else if (schedule <= 0) {
+    			scheduleEnabled = false;
+    			maintenanceTime = true;
+    			getConfig().set("maintenanceModeOnStart", true);
+    			saveConfig();
+    			Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceStart") );
         	}
     		for (Player player: Bukkit.getServer().getOnlinePlayers()) {
     			if ( !player.hasPermission( "maintenance.access" ) || !player.isOp() ) {
@@ -302,7 +328,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     public class MaintenanceDuration extends BukkitRunnable {
     	
         @SuppressWarnings("unused")
-	private final JavaPlugin plugin;
+		private final JavaPlugin plugin;
         private final CommandSender sender;
         
         public MaintenanceDuration(JavaPlugin plugin, CommandSender sender) {
@@ -311,7 +337,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
         }
      
         @SuppressWarnings("static-access")
-	@Override
+		@Override
         public void run() {
         	try{        		
         		for ( int i = remainingMilliseconds ; i >= 0 ; i--) {
@@ -361,6 +387,72 @@ public final class Maintenance extends JavaPlugin implements Listener {
 				e.printStackTrace();
 			} catch (NullPointerException e1) {
 				getLogger().severe( "No plugin named " + pluginToDisable + " to disable!" );
+			}
+		}
+    	
+    }
+    
+    public class cpuCommand extends BukkitRunnable {
+
+		private final Plugin plugin;
+        private final CommandSender sender;
+    	
+        public cpuCommand(JavaPlugin plugin , CommandSender sender) {
+            this.plugin = plugin;
+            this.sender = sender;
+        }
+    	
+		@SuppressWarnings("static-access")
+		@Override
+		public void run() {
+    		try {
+    			File smokeAnswer = new File( plugin.getDataFolder() + "/smokeAnswer.yml" );
+				sd.sendRequest("cpu");
+				while (!smokeAnswer.exists()) {
+					t4.sleep(1);
+					if (smokeAnswer.exists()) {
+						t4.sleep(650);
+					}
+				}
+				String answer = " " + sd.getInfo();
+	    		sender.sendMessage( getConfig().getString("cpuUsage") + answer + "%");
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+    	
+    }
+    
+    public class ramCommand extends BukkitRunnable {
+
+		private final Plugin plugin;
+        private final CommandSender sender;
+    	
+        public ramCommand(JavaPlugin plugin , CommandSender sender) {
+            this.plugin = plugin;
+            this.sender = sender;
+        }
+    	
+		@SuppressWarnings("static-access")
+		@Override
+		public void run() {
+    		try {
+    			File smokeAnswer = new File( plugin.getDataFolder() + "/smokeAnswer.yml" );
+				sd.sendRequest("ram");
+				while (!smokeAnswer.exists()) {
+					t5.sleep(1);
+					if (smokeAnswer.exists()) {
+						t4.sleep(650);
+					}
+				}
+				String answer = " " + sd.getInfo();
+	    		sender.sendMessage( getConfig().getString("ramUsage") + answer );
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
     	
