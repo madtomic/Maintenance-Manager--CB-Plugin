@@ -1,10 +1,21 @@
 name: MaintenanceManager
 main: io.github.jeremgamer.maintenance.Maintenance
-version: 0.4
+version: 0.5
 commands:
    maintenance:
       description: All commands from MaintenanceManager
       usage: /maintenance [on|off|cancel|reload|enable|disable] (schedule in minutes|plugin name) <duration in minutes>
       permission: maintenance.*
       permission-message: You are not allowed to do that.
+   cpu:
+      description: Returns the current CPU usage in percent.
+      usage: /cpu
+      permission: maintenance.cpu
+      permission-message: You are not allowed to do that.
+   ram:
+      description: Returns the current RAM usage in percent.
+      usage: /ram
+      permission: maintenance.ram
+      permission-message: You are not allowed to do that.
+      
 
