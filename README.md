@@ -3,7 +3,6 @@
 
 **Maintenance Manager is the ultimate maintenance plugin which makes maintenances times on your server way easier!**
 
-**Maintenance Manager is the ultimate maintenance plugin which makes maintenances times on your server way easier!**
 For the moment, it provides several exclusivities I havn't found anywhere else. It is very simple to use and to configure (even if the configuration is optionnal). I want to make it the best maintenance plugin for Bukkit so I'll do the maximum of myself to make frequent updates and add a maximum of features.
 
 
