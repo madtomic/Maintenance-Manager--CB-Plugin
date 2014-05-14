@@ -31,7 +31,7 @@ For the moment, it provides several exclusivities I havn't found anywhere else. 
 
 **/maintenance** is the main command. You'll have to add the following arguments:
 
-//Aliases:// **/mmode , /maint**
+*Aliases:* **/mmode , /maint**
 * on: turn on the maintenance mode
     - {schedule in minutes} (optionnal)
     - {duration of the maintenance in minutes} (optionnal)
