@@ -24,11 +24,14 @@ For the moment, it provides several exclusivities I havn't found anywhere else. 
 - You can choose the number of slots available during a maintenance.
 - Manage your plugins in real-time without having to reload or restart the server with /maintenance [enable|disable] (plugin name). Disabled plugins stay disabled after restart or reload until you re-enable it. 
 - Countdown in motd when a maintenance has a duration planned. 
-- Check the server hardware at any time with /cpu and /ram! 
+- Check the server hardware at any time with /cpu and /ram!
+- Aliases on /maintenance command. See the Commands section for further informations. 
 
 ##Commands:
 
 **/maintenance** is the main command. You'll have to add the following arguments:
+
+//Aliases:// **/mmode , /maint**
 * on: turn on the maintenance mode
     - {schedule in minutes} (optionnal)
     - {duration of the maintenance in minutes} (optionnal)
