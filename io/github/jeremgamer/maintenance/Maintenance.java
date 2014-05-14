@@ -94,7 +94,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-    	if (cmd.getName().equalsIgnoreCase( "maintenance")) { 
+    	if (cmd.getName().equalsIgnoreCase( "maintenance" ) || cmd.getName().equalsIgnoreCase( "mmode" ) || cmd.getName().equalsIgnoreCase( "maint" )) { 
     		if (args[0].equalsIgnoreCase( "on" ) && sender.hasPermission( "maintenance.maintenance")) {
     			if ( maintenanceTime == false ) {
     				
@@ -194,6 +194,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     				}
     				return true;
     			}
+    		return false;
     		}
     	
     	if (cmd.getName().equalsIgnoreCase( "cpu" ) && sender.hasPermission("maintenance.cpu")) { 
@@ -261,6 +262,11 @@ public final class Maintenance extends JavaPlugin implements Listener {
             			getConfig().set("maintenanceModeOnStart", true);
             			saveConfig();
             			Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceStart") );
+                		for (Player player: Bukkit.getServer().getOnlinePlayers()) {
+                			if ( !player.hasPermission( "maintenance.access" ) || !player.isOp() ) {
+                				player.kickPlayer( getConfig().getString("kickMessage") );;
+                			}
+                		}
     					t2.start();
     					durationEnabled = true;
     					maintenanceTime = true;
@@ -276,11 +282,6 @@ public final class Maintenance extends JavaPlugin implements Listener {
     			saveConfig();
     			Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceStart") );
         	}
-    		for (Player player: Bukkit.getServer().getOnlinePlayers()) {
-    			if ( !player.hasPermission( "maintenance.access" ) || !player.isOp() ) {
-    				player.kickPlayer( getConfig().getString("kickMessage") );;
-    			}
-    		}
     		} catch (NumberFormatException e){
     			sender.sendMessage( getConfig().getString("inputErrorSchedule") );
     		}
