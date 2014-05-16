@@ -40,7 +40,7 @@ public class SmokeDetector {
 		output.close();
 		}		
 		
-		File lib1 = new File( "/sigar-x86-winnt.dll");		
+		File lib1 = new File(new File("").getAbsolutePath() + "/sigar-x86-winnt.dll");		
 		try (InputStream input = Maintenance.class.getResourceAsStream("sigar-x86-winnt.dll");
 				OutputStream output = new FileOutputStream(lib1)) {
 			byte[] buf = new byte[8192];
@@ -54,7 +54,7 @@ public class SmokeDetector {
 		}
 		
 
-		File lib2 = new File("/sigar-amd64-winnt.dll");
+		File lib2 = new File(new File("").getAbsolutePath() + "/sigar-amd64-winnt.dll");
 		try (InputStream input = Maintenance.class.getResourceAsStream("sigar-amd64-winnt.dll");
 			OutputStream output = new FileOutputStream(lib2)) {
 			byte[] buf = new byte[8192];
@@ -68,7 +68,7 @@ public class SmokeDetector {
 		}
 		
 		
-		File lib3 = new File("/libsigar-amd64-linux.so");		
+		File lib3 = new File(new File("").getAbsolutePath() + "/libsigar-amd64-linux.so");		
 		try (InputStream input = Maintenance.class.getResourceAsStream("libsigar-amd64-linux.so");
 				OutputStream output = new FileOutputStream(lib3)) {
 					byte[] buf = new byte[8192];
@@ -82,7 +82,7 @@ public class SmokeDetector {
 		}
 		
 		
-		File lib4 = new File("/libsigar-x86-linux.so");		
+		File lib4 = new File(new File("").getAbsolutePath() + "/libsigar-x86-linux.so");		
 		try (InputStream input = Maintenance.class.getResourceAsStream("libsigar-x86-linux.so");
 				OutputStream output = new FileOutputStream(lib4)) {
 					byte[] buf = new byte[8192];
@@ -96,7 +96,7 @@ public class SmokeDetector {
 		}
 		
 		
-		File lib5 = new File("/libsigar-universal-macosx.dylib");		
+		File lib5 = new File(new File("").getAbsolutePath() + "/libsigar-universal-macosx.dylib");		
 		try (InputStream input = Maintenance.class.getResourceAsStream("libsigar-universal-macosx.dylib");
 				OutputStream output = new FileOutputStream(lib5)) {
 					byte[] buf = new byte[8192];
@@ -110,7 +110,7 @@ public class SmokeDetector {
 		}
 		
 		
-		File lib6 = new File("/libsigar-universal64-macosx.dylib");		
+		File lib6 = new File(new File("").getAbsolutePath() + "/libsigar-universal64-macosx.dylib");		
 		try (InputStream input = Maintenance.class.getResourceAsStream("libsigar-universal64-macosx.dylib");
 				OutputStream output = new FileOutputStream(lib6)) {
 					byte[] buf = new byte[8192];
