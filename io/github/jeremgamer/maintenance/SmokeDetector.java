@@ -27,19 +27,19 @@ public class SmokeDetector {
 	
 	public static void loadLibraries() throws IOException { 
 		
-		File sigarSmoke = new File(plugin.getDataFolder() + "/SigarSmoke.jar");		
+		File sigarSmoke = new File(plugin.getDataFolder() + "/SigarSmoke.jar");	
 		try (InputStream input = Maintenance.class.getResourceAsStream("SigarSmoke.jar");
-				OutputStream output = new FileOutputStream(sigarSmoke)) {
-			byte[] buf = new byte[8192];
-			int len;
-			while ( (len=input.read(buf)) > 0 ) {
-				output.write(buf, 0, len);
-			}
-			output.flush();
-			input.close();
-			output.close();
+		OutputStream output = new FileOutputStream(sigarSmoke)) {
+		byte[] buf = new byte[8192];
+		int len;
+		while ( (len=input.read(buf)) > 0 ) {
+		output.write(buf, 0, len);
 		}
-
+		output.flush();
+		input.close();
+		output.close();
+		}		
+		
 		File lib1 = new File(plugin.getDataFolder() + "/sigar-x86-winnt.dll");		
 		try (InputStream input = Maintenance.class.getResourceAsStream("sigar-x86-winnt.dll");
 				OutputStream output = new FileOutputStream(lib1)) {
