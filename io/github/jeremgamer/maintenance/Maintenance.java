@@ -49,6 +49,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     List<String> disabledPlugins;
     Plugin pluginToDisable;
     SmokeDetector sd = new SmokeDetector(this);
+    static long sleep;
 
    
     @SuppressWarnings("static-access")
@@ -67,7 +68,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
 			t2 = new Thread(new MaintenanceDuration(this, null));
     		t2.start();
     	}
-    	
+		sleep = getConfig().getLong("waitTime");
     	disabledPlugins = getConfig().getStringList("disabledPlugins");
     	if ( !disabledPlugins.isEmpty() ) {
 			t3 = new Thread(new disablingPluginsOnStart(this));
@@ -154,6 +155,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     				return true;
     			} else if (args[0].equalsIgnoreCase( "reload" ) && sender.hasPermission( "maintenance.reload")) {
     				this.reloadConfig();
+    				sleep = getConfig().getLong("waitTime");
     				sender.sendMessage( "MaintenanceManager config reloaded!" );
     				return true;
     			} else if (args[0].equalsIgnoreCase( "disable" ) && sender.hasPermission( "maintenance.manage.plugins")) {
@@ -411,12 +413,12 @@ public final class Maintenance extends JavaPlugin implements Listener {
 				sd.sendRequest("cpu");
 				while (!smokeAnswer.exists()) {
 					t4.sleep(1);
-					if (smokeAnswer.exists()) {
-						t4.sleep(1000);
-					}
 				}
-				String answer = " " + sd.getInfo();
-	    		sender.sendMessage( getConfig().getString("cpuUsage") + answer + "%");
+				if (smokeAnswer.exists()) {
+					t4.sleep(sleep);
+					String answer = " " + sd.getInfo();
+		    		sender.sendMessage( getConfig().getString("cpuUsage") + answer + "%");
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
@@ -440,17 +442,16 @@ public final class Maintenance extends JavaPlugin implements Listener {
 		@Override
 		public void run() {
     		try {
-    			long sleep = getConfig().getLong("waitTime");
     			File smokeAnswer = new File( plugin.getDataFolder() + "/smokeAnswer.yml" );
 				sd.sendRequest("ram");
 				while (!smokeAnswer.exists()) {
 					t5.sleep(1);
-					if (smokeAnswer.exists()) {
-						t4.sleep(sleep);
-					}
 				}
-				String answer = " " + sd.getInfo();
-	    		sender.sendMessage( getConfig().getString("ramUsage") + answer );
+				if (smokeAnswer.exists()) {
+					t4.sleep(sleep);
+					String answer = " " + sd.getInfo();
+		    		sender.sendMessage( getConfig().getString("ramUsage") + answer );
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
