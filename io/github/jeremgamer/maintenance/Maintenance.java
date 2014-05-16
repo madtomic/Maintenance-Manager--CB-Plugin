@@ -448,7 +448,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
 					t5.sleep(1);
 				}
 				if (smokeAnswer.exists()) {
-					t4.sleep(sleep);
+					t5.sleep(sleep);
 					String answer = " " + sd.getInfo();
 		    		sender.sendMessage( getConfig().getString("ramUsage") + answer );
 				}
