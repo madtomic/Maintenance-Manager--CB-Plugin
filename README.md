@@ -2,8 +2,12 @@
 ===========================
 
 **Maintenance Manager is the ultimate maintenance plugin which makes maintenances times on your server way easier!**
-
 For the moment, it provides several exclusivities I havn't found anywhere else. It is very simple to use and to configure (even if the configuration is optionnal). I want to make it the best maintenance plugin for Bukkit so I'll do the maximum of myself to make frequent updates and add a maximum of features.
+
+*Current version: 0.6*
+
+
+##**Check out [this] (https://github.com/JeremGamer/Maintenance-Manager--CB-Plugin/wiki/Download) page for downloads!**##
 
 
 ##Features:
@@ -62,7 +66,7 @@ maintenance.cpu: Allows to perform /cpu command.
 
 maintenance.ram: Allows to perform /ram command.
 
-Of course, OP players have these permissions.
+Of course, OP players have these permissions. Caution: *maintenance.** doesn't work!
 
 
 ##Configuration:
@@ -109,17 +113,26 @@ Advice: If you don't want to change the icon, upload your original one and put t
 
 To add colors to your texts, just put '§' and a character from 0-9 and a-f before the words you want to color. Please refer you to this page to know formatting codes: http://minecraft.gamepedia.com/Formatting_codes
 
+
 ##Setup
 
-To set up Maintenance Manager, simply download the jar file and put it into "plugins" folder.
-Run your server and enjoy!
+**Important: Please read carefully...**
 
-**Important: Please read carefully the instructions below...**
+To set up Maintenance Manager, simply download the jar file and put it into "plugins" folder, then, follow the instructions below.
+If you are using the alternate version, simply drop the jar file into your plugins folder and skip the instructions below.
 
-Run the server for the first time with MaintenanceManager and then try /cpu command. If it returns null ("CPU used at null%", highly probable), go to the config.yml and go to the section named "waitTime". The default value is 650 (milliseconds). Increase this value until the /cpu and /ram commands work properly. Caution, the value must be an integer!
+*SigarSmoke.jar is required to make /cpu and /ram possible. If you want a proof of what it is doing, check out the sources [[https://github.com/JeremGamer/Maintenance-Manager--CB-Plugin/tree/master/io/github/jeremgamer/sigarsmoke|here]]!*
+
+First, download [[https://app.box.com/s/rvbbbodnk3dl1zog6nit|this]], extract the folder into your plugins folder and extract all the other files (.dll/.so.dylib) into the main folder of your server (where is located craftbukkit.jar)
+
+Run the server for the first time with MaintenanceManager and then try /cpu command. If it returns null ("CPU used at null%", highly probable), go to the config.yml and go to the section named "waitTime". The default value is 650 (milliseconds). Increase this value until the **/cpu** and **/ram** commands work properly. Caution, the value must be an integer! You can modify it without having to restart or reload the server using **/maintenance reload**. Then, delete smokeAnswer.yml each time your try fails.
+
+And now enjoy the uniqueness of MaintenanceManager!
+
 
 ##To do
 
 * Reccurent maintenances.
-* Backups.
+* Backups. (Currently working on)
+* Improve permissions (doesn't work well)
 * Your suggestions. 
