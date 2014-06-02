@@ -30,6 +30,7 @@ For the moment, it provides several exclusivities I havn't found anywhere else. 
 - Countdown in motd when a maintenance has a duration planned. 
 - Check the server hardware at any time with /cpu and /ram!
 - Aliases on /maintenance command. See the Commands section for further informations. 
+- Backups on command. (Not working properly for the moment)
 
 ##Commands:
 
@@ -45,6 +46,7 @@ For the moment, it provides several exclusivities I havn't found anywhere else. 
 * enable {plugin name}: enable the selected plugin.
 * disable {plugin name}: disable the selected plugin.
 **Note: If you are not sure about the plugin name, type /plugins.**
+* backup: Saves the server folder into a zip file located in the "backups" folder. (Not working properly for the moment)
 
 **/cpu**: Returns the current use of the server's CPU in percent.
 
