@@ -133,5 +133,4 @@ And now enjoy the uniqueness of MaintenanceManager!
 
 * Reccurent maintenances.
 * Backups. (Currently working on)
-* Improve permissions (doesn't work well)
 * Your suggestions. 
