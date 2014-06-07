@@ -121,7 +121,6 @@ To add colors to your texts, just put '§' and a character from 0-9 and a-f befo
 **Important: Please read carefully...**
 
 To set up Maintenance Manager, simply download the jar file and put it into "plugins" folder, then, follow the instructions below.
-If you are using the alternate version, simply drop the jar file into your plugins folder and skip the instructions below.
 
 *SigarSmoke.jar and all sigar libraries are required to make /cpu and /ram possible. If you want a proof of what it is doing, check out the sources [here] (https://github.com/JeremGamer/Maintenance-Manager--CB-Plugin/tree/master/io/github/jeremgamer/sigarsmoke)!*
 
