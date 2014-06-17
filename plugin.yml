@@ -1,11 +1,11 @@
 name: MaintenanceManager
 main: io.github.jeremgamer.maintenance.Maintenance
-version: 0.6
+version: 0.71
 commands:
    maintenance:
       description: All commands from MaintenanceManager
       aliases: [mmode, maint]
-      usage: /maintenance [on|off|cancel|reload|enable|disable] (schedule in minutes|plugin name) <duration in minutes>
+      usage: /maintenance [on|off|cancel|reload|enable|disable|backup] (schedule in minutes|plugin name) <duration in minutes>
       permission: maintenance.*
       permission-message: You are not allowed to do that.
    cpu:
