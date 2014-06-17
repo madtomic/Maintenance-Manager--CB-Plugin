@@ -4,7 +4,7 @@
 **Maintenance Manager is the ultimate maintenance plugin which makes maintenances times on your server way easier!**
 For the moment, it provides several exclusivities I havn't found anywhere else. It is very simple to use and to configure (even if the configuration is optionnal). I want to make it the best maintenance plugin for Bukkit so I'll do the maximum of myself to make frequent updates and add a maximum of features.
 
-*Current version: 0.7*
+*Current version: 0.71*
 
 
 ##**Check out [this] (https://github.com/JeremGamer/Maintenance-Manager--CB-Plugin/wiki/Download) page for downloads!**##
@@ -30,7 +30,7 @@ For the moment, it provides several exclusivities I havn't found anywhere else. 
 - Countdown in motd when a maintenance has a duration planned. 
 - Check the server hardware at any time with /cpu and /ram!
 - Aliases on /maintenance command. See the Commands section for further informations. 
-- Backups on command. (Not working properly for the moment)
+- Backups on command.
 
 ##Commands:
 
@@ -132,5 +132,4 @@ And now enjoy the uniqueness of MaintenanceManager!
 ##To do
 
 * Reccurent maintenances.
-* Backups. (Currently working on)
 * Your suggestions. 
