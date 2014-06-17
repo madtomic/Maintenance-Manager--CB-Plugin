@@ -132,7 +132,9 @@ public final class Maintenance extends JavaPlugin implements Listener {
     			for (int i = 0; i < files.length; i++) {
 				if (files[i].isDirectory()) {
 					
-				} else {					
+				} else  if (files[i].getAbsolutePath().contains(zip.getName())){
+					
+				} else {
 				
 					filePath = files[i].getAbsolutePath().substring(srcDir.length() + 1);
 
