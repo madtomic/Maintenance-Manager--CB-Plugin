@@ -130,7 +130,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
 				String filePath;
 				
     			for (int i = 0; i < files.length; i++) {
-				if (files[i].isDirectory() || files[i].getAbsolutePath().contains("\\backup\\")) {
+				if (files[i].isDirectory()) {
 					
 				} else {					
 				
