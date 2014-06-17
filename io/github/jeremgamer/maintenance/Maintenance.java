@@ -2,12 +2,23 @@ package io.github.jeremgamer.maintenance;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
-
 import javax.imageio.ImageIO;
 
+import org.apache.commons.compress.archivers.ArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -91,11 +102,70 @@ public final class Maintenance extends JavaPlugin implements Listener {
     	getConfig();
     	this.saveConfig();
     }
+	
+    public void backupProcess(CommandSender sender)  {
+
+			Calendar cal = Calendar.getInstance();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy MM dd - HH mm ss");
+			String zipFile = new File("").getAbsolutePath() + "/backups/" + dateFormat.format(cal.getTime()) + ".zip";
+			File zip = new File(zipFile);
+    		String srcDir = new File("").getAbsolutePath();
+			
+    		try {
+
+				try {
+					zip.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+       			File dir = new File(srcDir);
+       			
+    			List<File> filesList = (List<File>) FileUtils.listFilesAndDirs(dir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+    			File[] files = filesList.toArray(new File[filesList.size()]);
+				
+
+				OutputStream out = new FileOutputStream(zip);
+				ArchiveOutputStream zipOutput = new ZipArchiveOutputStream(out);
+				String filePath;
+				
+    			for (int i = 0; i < files.length; i++) {
+				if (files[i].isDirectory() || files[i].getAbsolutePath().contains("\\backup\\")) {
+					
+				} else {					
+				
+					filePath = files[i].getAbsolutePath().substring(srcDir.length() + 1);
+
+					try {	
+						ZipArchiveEntry entry = new ZipArchiveEntry(filePath);
+						entry.setSize(new File(files[i].getAbsolutePath()).length());
+						zipOutput.putArchiveEntry(entry);
+						IOUtils.copy(new FileInputStream(files[i].getAbsolutePath()), zipOutput); 
+						zipOutput.closeArchiveEntry();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}				
+    			}
+					zipOutput.finish();  
+					zipOutput.close();  
+					out.close(); 
+    		} catch (IOException ioe) {
+    			ioe.printStackTrace();
+    		} catch (IllegalArgumentException iae) {    			
+    			iae.printStackTrace();
+    		}
+				
+    			sender.sendMessage("Backup success!");
+    			getLogger().info("Backup success!");
+	            getServer().dispatchCommand(getServer().getConsoleSender(), "save-on");
+		}
+    	
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-    	if (cmd.getName().equalsIgnoreCase( "maintenance" ) || cmd.getName().equalsIgnoreCase( "mmode" ) || cmd.getName().equalsIgnoreCase( "maint" )) { 
+    	if (cmd.getName().equalsIgnoreCase( "maintenance" ) || cmd.getName().equalsIgnoreCase( "mmode" ) || cmd.getName().equalsIgnoreCase( "maint" )) {
     		if (args[0].equalsIgnoreCase( "on" ) && sender.hasPermission( "maintenance.maintenance")) {
     			if ( maintenanceTime == false ) {
     				
@@ -117,6 +187,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     					scheduleArgument = args[1];
     					scheduleEnabled = true;
     					t = new Thread(new MaintenanceSchedule(this, sender));
+    					durationEnabled = true;
     					t2 = new Thread(new MaintenanceDuration(this, sender));
     					t.start();
     					try {
@@ -195,6 +266,35 @@ public final class Maintenance extends JavaPlugin implements Listener {
     					sender.sendMessage( getConfig().getString("noMaintenanceScheduled") );
     				}
     				return true;
+    			} else if (args[0].equalsIgnoreCase( "backup" ) && sender.hasPermission( "maintenance.maintenance.backup" )) {
+    			
+    				String folderPath = new File("").getAbsolutePath() + "/backups/";
+    				File folder = new File(folderPath);
+    				if (!folder.exists()) {
+    					if (folder.mkdir()) {
+    						getLogger().info("Backup folder created!");
+    					} else {
+    						getLogger().info("Failed to create backup folder...");
+    					}
+    				}
+  	    		
+    	            sender.sendMessage("Backing up. The server will lag brievely.");
+    	            getLogger().info("Backing up. The server will lag brievely.");
+    	            
+    	            
+	    	            if (getServer().isPrimaryThread()) {
+
+	    	                getServer().dispatchCommand(getServer().getConsoleSender(), "save-all");
+	    	                getServer().dispatchCommand(getServer().getConsoleSender(), "save-off");
+				    	    
+	    	                backupProcess(sender);
+
+		    	            return true;
+	    	            }
+    	            
+	    	            getServer().dispatchCommand(getServer().getConsoleSender(), "save-on");
+    	           	          
+    	    		return true;
     			}
     		return false;
     		}
@@ -218,7 +318,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLogin (final PlayerLoginEvent event) {
     	Player player = event.getPlayer();
-    	if (maintenanceTime == true && !player.isOp()) {    		
+    	if (maintenanceTime == true && !player.hasPermission("maintenance.acess")) {    		
     			event.disallow( org.bukkit.event.player.PlayerLoginEvent.Result.KICK_OTHER, getConfig().getString("maintenanceMessage") );
     			return;
     	} else if (maintenanceTime == true && player.hasPermission( "maintenance.acess" )) {
@@ -409,8 +509,8 @@ public final class Maintenance extends JavaPlugin implements Listener {
 		@Override
 		public void run() {
     		try {
-    			File smokeAnswer = new File( plugin.getDataFolder() + "/smokeAnswer.yml" );
 				sd.sendRequest("cpu");
+    			File smokeAnswer = new File( plugin.getDataFolder() + "/smokeAnswer.yml" );
 				while (!smokeAnswer.exists()) {
 					t4.sleep(1);
 				}
@@ -463,4 +563,5 @@ public final class Maintenance extends JavaPlugin implements Listener {
 		}
     	
     }
+    
 }
