@@ -4,7 +4,7 @@
 **Maintenance Manager is the ultimate maintenance plugin which makes maintenances times on your server way easier!**
 For the moment, it provides several exclusivities I havn't found anywhere else. It is very simple to use and to configure (even if the configuration is optionnal). I want to make it the best maintenance plugin for Bukkit so I'll do the maximum of myself to make frequent updates and add a maximum of features.
 
-*Current version: 0.71*
+*Current version: 0.72*
 
 
 ##**Check out [this] (https://github.com/JeremGamer/Maintenance-Manager--CB-Plugin/wiki/Download) page for downloads!**##
@@ -57,6 +57,8 @@ For the moment, it provides several exclusivities I havn't found anywhere else. 
 maintenance.maintenance: Allows to start or stop a maintenance.
 
 maintenance.maintenance.cancel: Allows to cancel a scheduled maintenance.
+
+maintenance.maintenance.backup: Allows to use the /maintenance backup command.
 
 maintenance.access: Allows to enter the server during maintenance mode (and don't be kicked when the maintenance begin)
 
