@@ -80,29 +80,30 @@ By default, the config file looks like this:
 ```
 maintenanceModeOnStart: false //Don't touch this line!
 remainingMilliseconds: 0 //Don't touch this line!
-kickMessage: The server is currently under maintenance. Come back later. //Displayed to players kicked by MaintenanceManager.
-maintenanceMessage: The server is currently under maintenance. Come back later. //Displayed to players who attempt to connect during a maintenance and who havn't the permission to connect.
-maintenanceMOTD: Maintenance mode... //The motd displayed on the multiplayer screen during a maintenance.
-maintenanceWithDurationMOTDBegin: Maintenance mode... //The first line of the motd when the maintenance has a duration planned
-maintenanceWithDurationMOTDEnd: minutes remaining!  //The second line of the motd when the maintenance has a duration planned. Follows the number of minutes remaining.
-maintenanceWithDurationMOTDLessThanOneMinute: Less than one minute remaining! //The second line of the motd when the maintenance has a duration planned and there is less than one minute remaining.
-maintenanceStart: Maintenance time! //Broadcast displayed at the beginning of a maintenance.
-maintenanceEnd: Maintenance finished! //Broadcast displayed at the end of a maintenance.
-scheduleMessageBegin: Maintenance in //The begin of the schedule message, the time value follows in the code...
-scheduleMessageEnd: minutes! //The end of the schedule message.
-scheduleCanceled: The scheduled maintenance have been canceled! //Displays in a broadcast when a maintenance is canceled.
-noMaintenanceScheduled: No maintenance scheduled... //Displays when /maintenance cancel is performed while no maintenance is scheduled.
-scheduleLessThanOneMinute: Maintenance in less than one minute! //Schedule message when the maintenance will begin in less than one minute
-inputErrorSchedule: The time value for schedule must be an integer! //Error message for wrong input
-inputErrorDuration: The time value for duration must be an integer! //Error message for wrong input
-pluginManagementArgumentErrorDisable: Please name the plugin you want to disable! //Error message for wrong input
-pluginManagementArgumentErrorEnable: Please name the plugin you want to enable! //Error message for wrong input
-pluginDisabled: successfully disabled! //Displayed when you disable a plugin. The plugin name will be just before it, no space needed.
-pluginEnabled: successfully enabled! //Displayed when you enable a plugin. The plugin name will be just before it, no space needed.
-maintenanceAlreadyLaunched: The server is already in maintenance mode. //Displayed when /maintenance on is performed during a maintenance.
-noMaintenanceLaunched: Maintenance mode is already off. //Displayed when /maintenance off is performed when the maintenance mode is off.
-cpuUsage: CPU used at //Followed by the CPU usage percentage.
-ramUsage: RAM used at //Followed by the RAM usage. (Format: "x% || yMB")
+kickMessage: "\xa7c\xa7nThe server is currently under maintenance. Come back later." //Displayed to players kicked by MaintenanceManager.
+maintenanceMessage: "\xa7c\xa7nThe server is currently under maintenance. Come back\
+  \ later." //Displayed to players who attempt to connect during a maintenance and who havn't the permission to connect.
+maintenanceMOTD: "\xa76\xa7o\xa7lMaintenance mode..." //The motd displayed on the multiplayer screen during a maintenance.
+maintenanceWithDurationMOTDBegin: "\xa76\xa7o\xa7lMaintenance mode...\xa72\xa7l" //The first line of the motd when the maintenance has a duration planned
+maintenanceWithDurationMOTDEnd: "\xa7r\xa7eminutes remaining!" //The second line of the motd when the maintenance has a duration planned. Follows the number of minutes remaining.
+maintenanceWithDurationMOTDLessThanOneMinute: "\xa72Less than one minute remaining!"  //The second line of the motd when the maintenance has a duration planned and there is less than one minute remaining.
+maintenanceStart: "\xa72\xa7o\xa7lMaintenance time!" //Broadcast displayed at the beginning of a maintenance.
+maintenanceEnd: "\xa76\xa7o\xa7lMaintenance finished!" //Broadcast displayed at the end of a maintenance.
+scheduleMessageBegin: "\xa75\xa7oMaintenance in\xa7r\xa74\xa7l" //The begin of the schedule message, the time value follows in the code...
+scheduleMessageEnd: "\xa7r\xa75\xa7ominutes!" //The end of the schedule message.
+scheduleCanceled: "\xa7a\xa7oThe scheduled maintenance have been canceled!" //Displays in a broadcast when a maintenance is canceled.
+noMaintenanceScheduled: "\xa7cNo maintenance scheduled..." //Displays when /maintenance cancel is performed while no maintenance is scheduled.
+scheduleLessThanOneMinute: "\xa75\xa7oMaintenance in less than one minute!" //Schedule message when the maintenance will begin in less than one minute
+inputErrorSchedule: "\xa7cThe time value for schedule must be an integer!" //Error message for wrong input
+inputErrorDuration: "\xa7cThe time value for duration must be an integer!" //Error message for wrong input
+pluginManagementArgumentErrorDisable: "\xa7cPlease name the plugin you want to disable!" //Error message for wrong input
+pluginManagementArgumentErrorEnable: "\xa7cPlease name the plugin you want to enable!" //Error message for wrong input
+pluginDisabled: "\xa7a\xa7osuccessfully disabled!" //Displayed when you disable a plugin. The plugin name will be just before it, no space needed.
+pluginEnabled: "\xa7a\xa7osuccessfully enabled!" //Displayed when you enable a plugin. The plugin name will be just before it, no space needed.
+maintenanceAlreadyLaunched: "\xa7cThe server is already in maintenance mode." //Displayed when /maintenance on is performed during a maintenance.
+noMaintenanceLaunched: "\xa7cMaintenance mode is already off." //Displayed when /maintenance off is performed when the maintenance mode is off.
+cpuUsage: "\xa73CPU used at\xa72\xa7l" //Followed by the CPU usage percentage.
+ramUsage: "\xa73RAM used at\xa72\xa7l" //Followed by the RAM usage. (Format: "x% || yMB")
 maxPlayersOnMaintenance: 10 //Must be an integer! The number of slots available during a maintenance
 maintenanceIcon: http://image.noelshack.com/fichiers/2014/19/1399387761-maintenancelogo.png //Check the adress two times before loading the config!
 disabledPlugins: [] //Take care when you modify the list!
