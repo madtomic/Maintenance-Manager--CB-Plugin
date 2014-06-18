@@ -23,7 +23,6 @@ maintenanceAlreadyLaunched: The server is already in maintenance mode.
 noMaintenanceLaunched: Maintenance mode is already off.
 cpuUsage: CPU used at
 ramUsage: RAM used at
-waitTime: 650
 maxPlayersOnMaintenance: 10
 maintenanceIcon: http://image.noelshack.com/fichiers/2014/19/1399387761-maintenancelogo.png
 disabledPlugins: []
