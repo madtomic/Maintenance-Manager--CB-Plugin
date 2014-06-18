@@ -49,6 +49,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     private Thread t;
     private Thread t2;
     private Thread t3;
+    private Thread t4;
     String pluginName;
     Plugin plugin;
     int maxPlayer;
@@ -75,12 +76,12 @@ public final class Maintenance extends JavaPlugin implements Listener {
     	remainingMilliseconds = getConfig().getInt("remainingMilliseconds");
     	if (remainingMilliseconds != 0) {
     		durationEnabled = true;
-			t2 = new Thread(new MaintenanceDuration(this, null));
+			t2 = new Thread(new MaintenanceDuration(null));
     		t2.start();
     	}
     	disabledPlugins = getConfig().getStringList("disabledPlugins");
     	if ( !disabledPlugins.isEmpty() ) {
-			t3 = new Thread(new disablingPluginsOnStart(this));
+			t3 = new Thread(new disablingPluginsOnStart());
     		t3.start();
     	}
     	
@@ -156,9 +157,8 @@ public final class Maintenance extends JavaPlugin implements Listener {
     			iae.printStackTrace();
     		}
 				
-    			sender.sendMessage("Backup success!");
-    			getLogger().info("Backup success!");
-	            getServer().dispatchCommand(getServer().getConsoleSender(), "save-on");
+    			sender.sendMessage("§2§o§lBackup success!");
+    			getLogger().info("§2§o§lBackup success!");
 		}
     	
 
@@ -179,22 +179,22 @@ public final class Maintenance extends JavaPlugin implements Listener {
     				if (args.length == 2) {
     					scheduleArgument = args[1];
     					scheduleEnabled = true;
-    					t = new Thread(new MaintenanceSchedule(this, sender));
+    					t = new Thread(new MaintenanceSchedule(sender));
     					t.start();
     					return true;
         	        	} 
     				if (args.length == 3) {
     					scheduleArgument = args[1];
     					scheduleEnabled = true;
-    					t = new Thread(new MaintenanceSchedule(this, sender));
+    					t = new Thread(new MaintenanceSchedule(sender));
     					durationEnabled = true;
-    					t2 = new Thread(new MaintenanceDuration(this, sender));
-    					t.start();
     					try {
     						remainingMilliseconds = Integer.parseInt(args[2]) * 60 * 1000;
     					} catch (NumberFormatException e){
     						sender.sendMessage( getConfig().getString("inputErrorDuration") );
     					}
+    					t2 = new Thread(new MaintenanceDuration(sender));
+    					t.start();
     					return true;
     				}
     				for (Player player: Bukkit.getServer().getOnlinePlayers()) {
@@ -213,6 +213,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     						durationEnabled = false;
         					maintenanceTime = false;
         					this.getConfig().set("maintenanceModeOnStart", false);
+        					Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceEnd") );
         					saveConfig();
     			    	} else {
     					maintenanceTime = false;
@@ -226,7 +227,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     				return true;
     			} else if (args[0].equalsIgnoreCase( "reload" ) && sender.hasPermission( "maintenance.reload")) {
     				this.reloadConfig();
-    				sender.sendMessage( "MaintenanceManager config reloaded!" );
+    				sender.sendMessage( "§2§oMaintenanceManager config reloaded!" );
     				return true;
     			} else if (args[0].equalsIgnoreCase( "disable" ) && sender.hasPermission( "maintenance.manage.plugins")) {
     				if (args.length == 2) {
@@ -253,7 +254,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     					pluginName = pluginName + " ";
     					sender.sendMessage( ChatColor.GOLD +  "§l" + pluginName + ChatColor.RESET + getConfig().getString("pluginEnabled") );
     				} else {
-    					sender.sendMessage( getConfig().getString("pluginManagementArgumentErrorDisable") );
+    					sender.sendMessage( getConfig().getString("pluginManagementArgumentErrorEnable") );
     				}
     				return true;
     			} else if (args[0].equalsIgnoreCase( "cancel" ) && sender.hasPermission( "mainteance.maintenance.cancel" )) {
@@ -267,32 +268,8 @@ public final class Maintenance extends JavaPlugin implements Listener {
     				return true;
     			} else if (args[0].equalsIgnoreCase( "backup" ) && sender.hasPermission( "maintenance.maintenance.backup" )) {
     			
-    				String folderPath = new File("").getAbsolutePath() + "/backups/";
-    				File folder = new File(folderPath);
-    				if (!folder.exists()) {
-    					if (folder.mkdir()) {
-    						getLogger().info("Backup folder created!");
-    					} else {
-    						getLogger().info("Failed to create backup folder...");
-    					}
-    				}
-  	    		
-    	            sender.sendMessage("Backing up. The server will lag brievely.");
-    	            getLogger().info("Backing up. The server will lag brievely.");
-    	            
-    	            
-	    	            if (getServer().isPrimaryThread()) {
-
-	    	                getServer().dispatchCommand(getServer().getConsoleSender(), "save-all");
-	    	                getServer().dispatchCommand(getServer().getConsoleSender(), "save-off");
-				    	    
-	    	                backupProcess(sender);
-
-		    	            return true;
-	    	            }
-    	            
-	    	            getServer().dispatchCommand(getServer().getConsoleSender(), "save-on");
-    	           	          
+					t4 = new Thread(new backup(sender));
+					t4.start();    	           	          
     	    		return true;
     			}
     		return false;
@@ -333,12 +310,9 @@ public final class Maintenance extends JavaPlugin implements Listener {
     
     public class MaintenanceSchedule extends BukkitRunnable {
     	
-        @SuppressWarnings("unused")
-		private final JavaPlugin plugin;
         private final CommandSender sender;
         
-        public MaintenanceSchedule(JavaPlugin plugin, CommandSender sender) {
-            this.plugin = plugin;
+        public MaintenanceSchedule(CommandSender sender) {
             this.sender = sender;
         }
      
@@ -435,12 +409,9 @@ public final class Maintenance extends JavaPlugin implements Listener {
     
     public class MaintenanceDuration extends BukkitRunnable {
     	
-        @SuppressWarnings("unused")
-		private final JavaPlugin plugin;
         private final CommandSender sender;
         
-        public MaintenanceDuration(JavaPlugin plugin, CommandSender sender) {
-            this.plugin = plugin;
+        public MaintenanceDuration(CommandSender sender) {
             this.sender = sender;
         }
      
@@ -451,6 +422,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
         		for ( int i = remainingMilliseconds ; i >= 0 ; i--) {
         			remainingMilliseconds--;
         			getConfig().set( "remainingMilliseconds" , i);
+        			saveConfig();
                 	try {
         				t2.sleep(1);
                 		if ( getConfig().getInt("remainingMilliseconds") == 0 && i == 0 && durationEnabled == true && maintenanceTime == true ) {
@@ -474,13 +446,6 @@ public final class Maintenance extends JavaPlugin implements Listener {
     
     public class disablingPluginsOnStart extends BukkitRunnable {
 
-		@SuppressWarnings("unused")
-		private final Plugin plugin;
-    	
-        public disablingPluginsOnStart(JavaPlugin plugin) {
-            this.plugin = plugin;
-        }
-    	
 		@SuppressWarnings("static-access")
 		@Override
 		public void run() {
@@ -496,6 +461,42 @@ public final class Maintenance extends JavaPlugin implements Listener {
 			} catch (NullPointerException e1) {
 				getLogger().severe( "No plugin named " + pluginToDisable + " to disable!" );
 			}
+		}
+    	
+    }
+    
+    public class backup extends BukkitRunnable {
+
+    	private final CommandSender sender;
+    	
+    	public backup(CommandSender sender) {
+    		this.sender = sender;
+    	}
+    	
+		@Override
+		public void run() {
+
+			String folderPath = new File("").getAbsolutePath() + "/backups/";
+			File folder = new File(folderPath);
+			if (!folder.exists()) {
+				if (folder.mkdir()) {
+					getLogger().info("Backup folder created!");
+				} else {
+					getLogger().warning("Failed to create backup folder...");
+				}
+			}
+  		
+            sender.sendMessage("§e§oBacking up. The server will lag brievely.");
+            getLogger().info("§e§oBacking up. The server will lag brievely.");
+            
+            
+            getServer().dispatchCommand(getServer().getConsoleSender(), "save-all");
+            getServer().dispatchCommand(getServer().getConsoleSender(), "save-off");
+		    	    
+	        backupProcess(sender);
+            
+	        getServer().dispatchCommand(getServer().getConsoleSender(), "save-on");
+			
 		}
     	
     }
