@@ -4,7 +4,7 @@
 **Maintenance Manager is the ultimate maintenance plugin which makes maintenances times on your server way easier!**
 For the moment, it provides several exclusivities I havn't found anywhere else. It is very simple to use and to configure (even if the configuration is optionnal). I want to make it the best maintenance plugin for Bukkit so I'll do the maximum of myself to make frequent updates and add a maximum of features.
 
-*Current version: 0.72*
+*Current version: 0.8*
 
 
 ##**Check out [this] (https://github.com/JeremGamer/Maintenance-Manager--CB-Plugin/wiki/Download) page for downloads!**##
@@ -50,7 +50,7 @@ For the moment, it provides several exclusivities I havn't found anywhere else. 
 
 **/cpu**: Returns the current use of the server's CPU in percent.
 
-**/ram**: Returns the current use of the server's RAM in percent and the current amount of MB used. Note: These two commands take a little time to perform because it requires to run external native code. Works only with Windows, Linux and MacOS.
+**/ram**: Returns the current use of the server's RAM in percent and the current amount of MB used. Note: Works only with Windows, Linux and MacOS.
 
 ##Permissions:
 
@@ -103,7 +103,6 @@ maintenanceAlreadyLaunched: The server is already in maintenance mode. //Display
 noMaintenanceLaunched: Maintenance mode is already off. //Displayed when /maintenance off is performed when the maintenance mode is off.
 cpuUsage: CPU used at //Followed by the CPU usage percentage.
 ramUsage: RAM used at //Followed by the RAM usage. (Format: "x% || yMB")
-waitTime: 650 //THIS LINE IS VERY IMPORTANT! It must be an integer. Defines the time the plugin will wait before answering /cpu and /ram. If the command return null, please increase this value. DO NOT DECREASE IT!
 maxPlayersOnMaintenance: 10 //Must be an integer! The number of slots available during a maintenance
 maintenanceIcon: http://image.noelshack.com/fichiers/2014/19/1399387761-maintenancelogo.png //Check the adress two times before loading the config!
 disabledPlugins: [] //Take care when you modify the list!
@@ -122,11 +121,7 @@ To add colors to your texts, just put '§' and a character from 0-9 and a-f befo
 
 **Important: Please read carefully...**
 
-To set up Maintenance Manager, simply download the jar file and put it into "plugins" folder, then, follow the instructions below.
-
-*SigarSmoke.jar and all sigar libraries are required to make /cpu and /ram possible. If you want a proof of what it is doing, check out the sources [here] (https://github.com/JeremGamer/Maintenance-Manager--CB-Plugin/tree/master/io/github/jeremgamer/sigarsmoke)!*
-
-Run the server for the first time with MaintenanceManager and then try /cpu command. If it returns null ("CPU used at null%", highly probable), go to the config.yml and go to the section named "waitTime". The default value is 650 (milliseconds). Increase this value until the **/cpu** and **/ram** commands work properly. Caution, the value must be an integer! You can modify it without having to restart or reload the server using **/maintenance reload**. Then, delete smokeAnswer.yml each time your try fails.
+To set up Maintenance Manager, simply download the jar file and put it into "plugins" folder!
 
 And now enjoy the uniqueness of MaintenanceManager!
 
