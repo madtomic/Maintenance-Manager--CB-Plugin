@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+
 import javax.imageio.ImageIO;
 
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
@@ -34,6 +35,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.CachedServerIcon;
+import org.hyperic.sigar.SigarException;
 
 public final class Maintenance extends JavaPlugin implements Listener {
 	
@@ -47,8 +49,6 @@ public final class Maintenance extends JavaPlugin implements Listener {
     private Thread t;
     private Thread t2;
     private Thread t3;
-    private Thread t4;
-    private Thread t5;
     String pluginName;
     Plugin plugin;
     int maxPlayer;
@@ -60,7 +60,6 @@ public final class Maintenance extends JavaPlugin implements Listener {
     List<String> disabledPlugins;
     Plugin pluginToDisable;
     SmokeDetector sd = new SmokeDetector(this);
-    static long sleep;
 
    
     @SuppressWarnings("static-access")
@@ -79,7 +78,6 @@ public final class Maintenance extends JavaPlugin implements Listener {
 			t2 = new Thread(new MaintenanceDuration(this, null));
     		t2.start();
     	}
-		sleep = getConfig().getLong("waitTime");
     	disabledPlugins = getConfig().getStringList("disabledPlugins");
     	if ( !disabledPlugins.isEmpty() ) {
 			t3 = new Thread(new disablingPluginsOnStart(this));
@@ -132,7 +130,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     			for (int i = 0; i < files.length; i++) {
 				if (files[i].isDirectory()) {
 					
-				} else  if (files[i].getAbsolutePath().contains(zip.getName())){
+				} else  if (files[i].getAbsolutePath().contains(new File("").getAbsolutePath() + "\\backups\\")){
 					
 				} else {
 				
@@ -228,7 +226,6 @@ public final class Maintenance extends JavaPlugin implements Listener {
     				return true;
     			} else if (args[0].equalsIgnoreCase( "reload" ) && sender.hasPermission( "maintenance.reload")) {
     				this.reloadConfig();
-    				sleep = getConfig().getLong("waitTime");
     				sender.sendMessage( "MaintenanceManager config reloaded!" );
     				return true;
     			} else if (args[0].equalsIgnoreCase( "disable" ) && sender.hasPermission( "maintenance.manage.plugins")) {
@@ -302,14 +299,20 @@ public final class Maintenance extends JavaPlugin implements Listener {
     		}
     	
     	if (cmd.getName().equalsIgnoreCase( "cpu" ) && sender.hasPermission("maintenance.cpu")) { 
-			t4 = new Thread(new cpuCommand(this, sender));
-			t4.start();
+    		try {
+				sender.sendMessage( getConfig().getString("cpuUsage") + " " + SmokeDetector.getCpuUsage() + "%");
+			} catch (SigarException e) {
+				getLogger().warning(e.getMessage());
+			}
     		return true;
     	}
     	
     	if (cmd.getName().equalsIgnoreCase( "ram" ) && sender.hasPermission("maintenance.ram")) { 
-    		t5 = new Thread(new ramCommand(this , sender));
-    		t5.start();
+			try {
+				sender.sendMessage( getConfig().getString("ramUsage") + " " + SmokeDetector.getMemUsagePercent() + "% || " + SmokeDetector.getMemUsage() + "MB");
+			} catch (SigarException e) {
+				getLogger().warning(e.getMessage());
+			}
     		return true;
     	}
 			return false;
@@ -493,75 +496,6 @@ public final class Maintenance extends JavaPlugin implements Listener {
 			} catch (NullPointerException e1) {
 				getLogger().severe( "No plugin named " + pluginToDisable + " to disable!" );
 			}
-		}
-    	
-    }
-    
-    public class cpuCommand extends BukkitRunnable {
-
-		private final Plugin plugin;
-        private final CommandSender sender;
-    	
-        public cpuCommand(JavaPlugin plugin , CommandSender sender) {
-            this.plugin = plugin;
-            this.sender = sender;
-        }
-    	
-		@SuppressWarnings("static-access")
-		@Override
-		public void run() {
-    		try {
-				sd.sendRequest("cpu");
-    			File smokeAnswer = new File( plugin.getDataFolder() + "/smokeAnswer.yml" );
-				while (!smokeAnswer.exists()) {
-					t4.sleep(1);
-				}
-				if (smokeAnswer.exists()) {
-					t4.sleep(sleep);
-					String answer = " " + sd.getInfo();
-		    		sender.sendMessage( getConfig().getString("cpuUsage") + answer + "%");
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-    	
-    }
-    
-    public class ramCommand extends BukkitRunnable {
-
-		private final Plugin plugin;
-        private final CommandSender sender;
-    	
-        public ramCommand(JavaPlugin plugin , CommandSender sender) {
-            this.plugin = plugin;
-            this.sender = sender;
-        }
-    	
-		@SuppressWarnings("static-access")
-		@Override
-		public void run() {
-    		try {
-    			File smokeAnswer = new File( plugin.getDataFolder() + "/smokeAnswer.yml" );
-				sd.sendRequest("ram");
-				while (!smokeAnswer.exists()) {
-					t5.sleep(1);
-				}
-				if (smokeAnswer.exists()) {
-					t5.sleep(sleep);
-					String answer = " " + sd.getInfo();
-		    		sender.sendMessage( getConfig().getString("ramUsage") + answer );
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			}
-			
 		}
     	
     }
