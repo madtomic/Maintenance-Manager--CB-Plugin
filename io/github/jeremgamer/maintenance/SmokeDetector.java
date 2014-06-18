@@ -1,17 +1,17 @@
 package io.github.jeremgamer.maintenance;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.hyperic.sigar.CpuPerc;
+import org.hyperic.sigar.Mem;
+import org.hyperic.sigar.Sigar;
+import org.hyperic.sigar.SigarException;
 
 public class SmokeDetector {
 	
@@ -22,23 +22,8 @@ public class SmokeDetector {
 		this.plugin = plugin;
 	}
 
-	Process r;
-	private static String OS = System.getProperty("os.name").toLowerCase();
 	
 	public static void loadLibraries() throws IOException { 
-		
-		File sigarSmoke = new File(plugin.getDataFolder() + "/SigarSmoke.jar");	
-		try (InputStream input = Maintenance.class.getResourceAsStream("SigarSmoke.jar");
-		OutputStream output = new FileOutputStream(sigarSmoke)) {
-		byte[] buf = new byte[8192];
-		int len;
-		while ( (len=input.read(buf)) > 0 ) {
-		output.write(buf, 0, len);
-		}
-		output.flush();
-		input.close();
-		output.close();
-		}		
 		
 		File lib1 = new File(new File("").getAbsolutePath() + "/sigar-x86-winnt.dll");		
 		try (InputStream input = Maintenance.class.getResourceAsStream("sigar-x86-winnt.dll");
@@ -126,41 +111,39 @@ public class SmokeDetector {
 	
 	}
 	
-	public void sendRequest(String request) throws IOException {
-		File smoke = new File(plugin.getDataFolder() + "/smoke.yml");
-		if (!smoke.exists()) {
-			smoke.createNewFile();
-		}
-		FileWriter fw;
-		fw = new FileWriter(smoke.getAbsoluteFile());
-		BufferedWriter bw = new BufferedWriter(fw);
-		bw.write(request);
-		bw.close();
+	public static int getCpuUsage() throws SigarException {
 		
-		try {
-			if (OS.contains("win")) {
-			Runtime.getRuntime().exec("cmd /c start " + plugin.getDataFolder() + "/SigarSmoke.jar");
-			}
-			if (OS.contains("mac")) {
-			Runtime.getRuntime().exec("start " + plugin.getDataFolder() + "/SigarSmoke.jar");
-			}
-			if (OS.contains("nix") || OS.contains("nux") || OS.contains("aix")) {
-			Runtime.getRuntime().exec("xdg-open " + plugin.getDataFolder() + "/SigarSmoke.jar");
-			}
-			} catch (IOException e) {
-
-			} 
+		Sigar sigar = new Sigar();
+		CpuPerc cpu = sigar.getCpuPerc();
+		double cpuUsage = cpu.getUser() * 100 + cpu.getSys() * 100 ;
+		int display = (int)cpuUsage;
+        return display;
 	}
 	
-	public String getInfo() throws IOException {
-		File smokeAnswer = new File(plugin.getDataFolder() + "/smokeAnswer.yml");
-    	FileReader fr;
-		fr = new FileReader(smokeAnswer.getAbsoluteFile());
-		BufferedReader br = new BufferedReader(fr);
-		String info = br.readLine();
-		br.close();
-		smokeAnswer.delete();
-		return info;
+	public static int getMemUsagePercent() throws SigarException {
+		
+		Sigar sigar = new Sigar();
+		Mem mem = null;
+        try {
+            mem = sigar.getMem();
+        } catch (SigarException se) {
+            se.printStackTrace();
+            }
+        double MEMUse = mem.getUsedPercent();
+		int displayPercent = (int) MEMUse;
+        return displayPercent;
+	}
+	public static long getMemUsage() throws SigarException {
+		
+		Sigar sigar = new Sigar();
+		Mem mem = null;
+        try {
+            mem = sigar.getMem();
+        } catch (SigarException se) {
+            se.printStackTrace();
+            }
+        long MEMUse = mem.getUsed() / 1024 / 1024;
+		return MEMUse;
 	}
 	
 }
