@@ -120,7 +120,6 @@ To add colors to your texts, just put '§' and a character from 0-9 and a-f befo
 
 ##Setup
 
-**Important: Please read carefully...**
 
 To set up Maintenance Manager, simply download the jar file and put it into "plugins" folder!
 
