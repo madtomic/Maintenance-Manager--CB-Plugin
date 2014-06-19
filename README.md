@@ -128,5 +128,4 @@ And now enjoy the uniqueness of MaintenanceManager!
 
 ##To do
 
-* Reccurent maintenances.
 * Your suggestions. 
