@@ -46,7 +46,7 @@ For the moment, it provides several exclusivities I havn't found anywhere else. 
 * enable {plugin name}: enable the selected plugin.
 * disable {plugin name}: disable the selected plugin.
 **Note: If you are not sure about the plugin name, type /plugins.**
-* backup: Saves the server folder into a zip file located in the "backups" folder. (Not working properly for the moment)
+* backup: Saves the server folder into a zip file located in the "backups" folder.
 
 **/cpu**: Returns the current use of the server's CPU in percent.
 
