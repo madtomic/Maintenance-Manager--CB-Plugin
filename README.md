@@ -111,7 +111,7 @@ disabledPlugins: [] //Take care when you modify the list!
 
 *Note: Your icon must be a 64X64 png image! Protected adresses (https://) may not work!*
 
-Advice: If you don't want to change the icon, upload your original one and put the adress in the config file.
+Advice: If you don't want to change the icon, upload your original one and put the adress in the config file.  You can also use a maintenance icon located on your local drive using a file:// URI, e.g. file:///C:/craftbukkit/server-icon-maintenance.png
 
 **Important: If your server is running without icon, the one which is in the config file will be displayed even out of a maintenance!**
 
