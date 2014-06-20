@@ -1,9 +1,12 @@
 package io.github.jeremgamer.maintenance;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
@@ -164,8 +167,27 @@ public final class Maintenance extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-
+    	try {
     	if (cmd.getName().equalsIgnoreCase( "maintenance" ) || cmd.getName().equalsIgnoreCase( "mmode" ) || cmd.getName().equalsIgnoreCase( "maint" )) {
+    		if (args.length == 0) {
+    			File help = new File(this.getDataFolder() + "/help.yml");
+    			String str = "";
+    	    	FileReader fr;
+    			try {
+					fr = new FileReader(help.getAbsoluteFile());
+					@SuppressWarnings("resource")
+					BufferedReader bw = new BufferedReader(fr);
+					for (int i = 0; i < 14 ; i++) {
+						str += bw.readLine() + "\n";
+					}
+					sender.sendMessage(str);
+					return true;
+				} catch (FileNotFoundException e) {
+					getLogger().warning(e.getMessage());
+				} catch (IOException e) {
+					getLogger().warning(e.getMessage());
+				}
+    		}    		
     		if (args[0].equalsIgnoreCase( "on" ) && sender.hasPermission( "maintenance.maintenance")) {
     			if ( maintenanceTime == false ) {
     				
@@ -274,6 +296,8 @@ public final class Maintenance extends JavaPlugin implements Listener {
     			}
     		return false;
     		}
+    } catch (ArrayIndexOutOfBoundsException aioobe) {
+    }
     	
     	if (cmd.getName().equalsIgnoreCase( "cpu" ) && sender.hasPermission("maintenance.cpu")) { 
     		try {
