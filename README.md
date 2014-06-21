@@ -4,7 +4,7 @@
 **Maintenance Manager is the ultimate maintenance plugin which makes maintenances times on your server way easier!**
 For the moment, it provides several exclusivities I havn't found anywhere else. It is very simple to use and to configure (even if the configuration is optionnal). I want to make it the best maintenance plugin for Bukkit so I'll do the maximum of myself to make frequent updates and add a maximum of features.
 
-*Current version: 1.01*
+*Current version: 1.02*
 
 
 ##**Check out [this] (https://github.com/JeremGamer/Maintenance-Manager--CB-Plugin/wiki/Download) page for downloads!**##
@@ -102,18 +102,20 @@ pluginDisabled: "\xa7a\xa7osuccessfully disabled!" //Displayed when you disable 
 pluginEnabled: "\xa7a\xa7osuccessfully enabled!" //Displayed when you enable a plugin. The plugin name will be just before it, no space needed.
 maintenanceAlreadyLaunched: "\xa7cThe server is already in maintenance mode." //Displayed when /maintenance on is performed during a maintenance.
 noMaintenanceLaunched: "\xa7cMaintenance mode is already off." //Displayed when /maintenance off is performed when the maintenance mode is off.
+maintenanceAlreadyScheduled: "\xa7cA maintenance is already scheduled."
 cpuUsage: "\xa73CPU used at\xa72\xa7l" //Followed by the CPU usage percentage.
 ramUsage: "\xa73RAM used at\xa72\xa7l" //Followed by the RAM usage. (Format: "x% || yMB")
 maxPlayersOnMaintenance: 10 //Must be an integer! The number of slots available during a maintenance
-maintenanceIcon: http://image.noelshack.com/fichiers/2014/19/1399387761-maintenancelogo.png //Check the adress two times before loading the config!
 disabledPlugins: [] //Take care when you modify the list!
 ```
 
-*Note: Your icon must be a 64X64 png image! Protected adresses (https://) may not work!*
 
-Advice: If you don't want to change the icon, upload your original one and put the adress in the config file.  You can also use a maintenance icon located on your local drive using a file:// URI, e.g. file:///C:/craftbukkit/server-icon-maintenance.png
+To set your custom icon for maintenances, just put an image named maintenance-icon.png in the main folder of your server. The default one auto-creates if the plugins doesn't find any maintenance-icon.png in that folder.
+*Note: Your icon must be a 64X64 png image!*
 
-**Important: If your server is running without icon, the one which is in the config file will be displayed even out of a maintenance!**
+Advice: If you don't want to change the icon, copy-paste server-icon.png and rename it into maintenance-icon.png
+
+**Important: If your server is running without icon, maintenance-icon.png will be displayed even out of a maintenance!**
 
 To add colors to your texts, just put '§' and a character from 0-9 and a-f before the words you want to color. Please refer you to this page to know formatting codes: http://minecraft.gamepedia.com/Formatting_codes
 
