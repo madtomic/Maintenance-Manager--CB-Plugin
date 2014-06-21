@@ -6,10 +6,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -59,11 +59,12 @@ public final class Maintenance extends JavaPlugin implements Listener {
     String scheduleMessageBegin;
     String scheduleMessageEnd;
     boolean durationEnabled = false;
-    int remainingMilliseconds;
+    long remainingMilliseconds;
     boolean scheduleEnabled = false;
     List<String> disabledPlugins;
     Plugin pluginToDisable;
     SmokeDetector sd = new SmokeDetector(this);
+    File icon;
 
    
     @SuppressWarnings("static-access")
@@ -76,7 +77,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     	}
     	getConfig();
     	maintenanceTime = getConfig().getBoolean("maintenanceModeOnStart");
-    	remainingMilliseconds = getConfig().getInt("remainingMilliseconds");
+    	remainingMilliseconds = getConfig().getLong("remainingMilliseconds");
     	if (remainingMilliseconds != 0) {
     		durationEnabled = true;
 			t2 = new Thread(new MaintenanceDuration(null));
@@ -92,6 +93,23 @@ public final class Maintenance extends JavaPlugin implements Listener {
 			sd.loadLibraries();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+    	
+		File srcIcon = new File(new File("").getAbsolutePath() + "/maintenance-icon.png");
+		if (!srcIcon.exists()) {
+			try (InputStream input = Maintenance.class.getResourceAsStream("maintenance-icon.png");
+					OutputStream output = new FileOutputStream(srcIcon)) {
+						byte[] buf = new byte[8192];
+						int len;
+						while ( (len=input.read(buf)) > 0 ) {
+							output.write(buf, 0, len);
+						}
+						output.flush();
+						input.close();
+						output.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
     }
  
@@ -170,13 +188,11 @@ public final class Maintenance extends JavaPlugin implements Listener {
     	try {
     	if (cmd.getName().equalsIgnoreCase( "maintenance" ) || cmd.getName().equalsIgnoreCase( "mmode" ) || cmd.getName().equalsIgnoreCase( "maint" )) {
     		if (args.length == 0) {
-    			File help = new File(this.getDataFolder() + "/help.yml");
+    			InputStream input = Maintenance.class.getResourceAsStream("help.yml");
+    			InputStreamReader isr = new InputStreamReader(input);
     			String str = "";
-    	    	FileReader fr;
     			try {
-					fr = new FileReader(help.getAbsoluteFile());
-					@SuppressWarnings("resource")
-					BufferedReader bw = new BufferedReader(fr);
+    				BufferedReader bw = new BufferedReader(isr);
 					for (int i = 0; i < 14 ; i++) {
 						str += bw.readLine() + "\n";
 					}
@@ -192,31 +208,43 @@ public final class Maintenance extends JavaPlugin implements Listener {
     			if ( maintenanceTime == false ) {
     				
     				if ( args.length == 1 ) {
+    					if (!scheduleEnabled == true) {
             			maintenanceTime = true;
             			this.getConfig().set("maintenanceModeOnStart", true);
             			saveConfig();
             			Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceStart") );
+    					} else {
+    						sender.sendMessage( getConfig().getString("maintenanceAlreadyScheduled") );
+    					}
     				}
     				
     				if (args.length == 2) {
+    					if (!scheduleEnabled == true) {
     					scheduleArgument = args[1];
     					scheduleEnabled = true;
     					t = new Thread(new MaintenanceSchedule(sender));
     					t.start();
+    					} else {
+    						sender.sendMessage( getConfig().getString("maintenanceAlreadyScheduled") );
+    					}
     					return true;
         	        	} 
     				if (args.length == 3) {
+    					if (!scheduleEnabled == true) {
     					scheduleArgument = args[1];
     					scheduleEnabled = true;
     					t = new Thread(new MaintenanceSchedule(sender));
     					durationEnabled = true;
     					try {
-    						remainingMilliseconds = Integer.parseInt(args[2]) * 60 * 1000;
+    						remainingMilliseconds = Long.parseLong(args[2]) * 60 * 1000;
     					} catch (NumberFormatException e){
     						sender.sendMessage( getConfig().getString("inputErrorDuration") );
     					}
     					t2 = new Thread(new MaintenanceDuration(sender));
     					t.start();
+    					} else {
+    						sender.sendMessage( getConfig().getString("maintenanceAlreadyScheduled") );
+    					}
     					return true;
     				}
     				for (Player player: Bukkit.getServer().getOnlinePlayers()) {
@@ -296,8 +324,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     			}
     		return false;
     		}
-    } catch (ArrayIndexOutOfBoundsException aioobe) {
-    }
+    } catch (ArrayIndexOutOfBoundsException aioobe) {}
     	
     	if (cmd.getName().equalsIgnoreCase( "cpu" ) && sender.hasPermission("maintenance.cpu")) { 
     		try {
@@ -389,7 +416,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
         	}
     		} catch (NumberFormatException e){
     			sender.sendMessage( getConfig().getString("inputErrorSchedule") );
-    		}
+    		}    
         }
     }
     
@@ -411,7 +438,8 @@ public final class Maintenance extends JavaPlugin implements Listener {
         		event.setMotd( getConfig().getString("maintenanceMOTD") );
     		}
 			try {
-				BufferedImage maintenanceImage = ImageIO.read(new URL( getConfig().getString("maintenanceIcon") ));
+				icon = new File( new File("").getAbsolutePath() + "/maintenance-icon.png" );
+				BufferedImage maintenanceImage = ImageIO.read(icon);
 				CachedServerIcon maintenanceIcon = Bukkit.getServer().loadServerIcon(maintenanceImage);
 	    		event.setServerIcon(maintenanceIcon); 
 			} catch (IOException e) {
@@ -442,14 +470,15 @@ public final class Maintenance extends JavaPlugin implements Listener {
         @SuppressWarnings("static-access")
 		@Override
         public void run() {
-        	try{        		
-        		for ( int i = remainingMilliseconds ; i >= 0 ; i--) {
+        	try{
+        		long i2 = remainingMilliseconds;
+        		for (long i = i2; i >= 0 ; i--) {
         			remainingMilliseconds--;
         			getConfig().set( "remainingMilliseconds" , i);
         			saveConfig();
                 	try {
         				t2.sleep(1);
-                		if ( getConfig().getInt("remainingMilliseconds") == 0 && i == 0 && durationEnabled == true && maintenanceTime == true ) {
+                		if ( getConfig().getLong("remainingMilliseconds") == 0 && i == 0 && durationEnabled == true && maintenanceTime == true ) {
                    			durationEnabled = false;
                 			getConfig().set("maintenanceModeOnStart", false);
                 			maintenanceTime = false;
