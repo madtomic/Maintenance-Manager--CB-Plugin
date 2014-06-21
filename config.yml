@@ -22,8 +22,8 @@ pluginDisabled: "\xa7a\xa7osuccessfully disabled!"
 pluginEnabled: "\xa7a\xa7osuccessfully enabled!"
 maintenanceAlreadyLaunched: "\xa7cThe server is already in maintenance mode."
 noMaintenanceLaunched: "\xa7cMaintenance mode is already off."
+maintenanceAlreadyScheduled: "\xa7cA maintenance is already scheduled."
 cpuUsage: "\xa73CPU used at\xa72\xa7l"
 ramUsage: "\xa73RAM used at\xa72\xa7l"
 maxPlayersOnMaintenance: 10
-maintenanceIcon: http://image.noelshack.com/fichiers/2014/19/1399387761-maintenancelogo.png
 disabledPlugins: []
