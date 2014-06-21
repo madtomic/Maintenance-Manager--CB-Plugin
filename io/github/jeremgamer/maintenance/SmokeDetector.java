@@ -107,20 +107,6 @@ public class SmokeDetector {
 					input.close();
 					output.close();
 		}
-		
-		File help = new File(plugin.getDataFolder() + "/help.yml");		
-		try (InputStream input = Maintenance.class.getResourceAsStream("help.yml");
-				OutputStream output = new FileOutputStream(help)) {
-			byte[] buf = new byte[8192];
-			int len;
-			while ( (len=input.read(buf)) > 0 ) {
-				output.write(buf, 0, len);
-			}
-			output.flush();
-			input.close();
-			output.close();
-		}
-
 	
 	}
 	
