@@ -65,8 +65,8 @@ public final class Maintenance extends JavaPlugin implements Listener {
     Plugin pluginToDisable;
     SmokeDetector sd = new SmokeDetector(this);
     File icon;
-
-   
+    
+    
     @SuppressWarnings("static-access")
 	@Override
     public void onEnable() {
@@ -231,17 +231,19 @@ public final class Maintenance extends JavaPlugin implements Listener {
         	        	} 
     				if (args.length == 3) {
     					if (!scheduleEnabled == true) {
-    					scheduleArgument = args[1];
-    					scheduleEnabled = true;
-    					t = new Thread(new MaintenanceSchedule(sender));
-    					durationEnabled = true;
-    					try {
-    						remainingMilliseconds = Long.parseLong(args[2]) * 60 * 1000;
-    					} catch (NumberFormatException e){
-    						sender.sendMessage( getConfig().getString("inputErrorDuration") );
-    					}
-    					t2 = new Thread(new MaintenanceDuration(sender));
-    					t.start();
+        					try {
+        						remainingMilliseconds = Long.parseLong(args[2]) * 60 * 1000;
+        						scheduleArgument = args[1];
+        						scheduleEnabled = true;
+        						t = new Thread(new MaintenanceSchedule(sender));
+        						durationEnabled = true;
+
+        						t2 = new Thread(new MaintenanceDuration(sender));
+        						t.start();
+        						
+        					} catch (NumberFormatException e){
+        						sender.sendMessage( getConfig().getString("inputErrorDuration") );
+        					}
     					} else {
     						sender.sendMessage( getConfig().getString("maintenanceAlreadyScheduled") );
     					}
@@ -399,8 +401,10 @@ public final class Maintenance extends JavaPlugin implements Listener {
                 				player.kickPlayer( getConfig().getString("kickMessage") );;
                 			}
                 		}
+                		if (remainingMilliseconds != 0) {
     					t2.start();
     					durationEnabled = true;
+                		}
     					maintenanceTime = true;
     					getConfig().set("maintenanceModeOnStart", true);
     					saveConfig();
@@ -413,6 +417,9 @@ public final class Maintenance extends JavaPlugin implements Listener {
     			getConfig().set("maintenanceModeOnStart", true);
     			saveConfig();
     			Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceStart") );
+    			if (remainingMilliseconds != 0) {
+    			t2.start();
+    			}
         	}
     		} catch (NumberFormatException e){
     			sender.sendMessage( getConfig().getString("inputErrorSchedule") );
