@@ -1,6 +1,6 @@
 name: MaintenanceManager
 main: io.github.jeremgamer.maintenance.Maintenance
-version: 1.02
+version: 1.03
 commands:
    maintenance:
       description: All commands from MaintenanceManager
