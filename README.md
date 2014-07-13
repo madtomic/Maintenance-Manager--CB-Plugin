@@ -4,7 +4,7 @@
 **Maintenance Manager is the ultimate maintenance plugin which makes maintenances times on your server way easier!**
 For the moment, it provides several exclusivities I havn't found anywhere else. It is very simple to use and to configure (even if the configuration is optionnal). I want to make it the best maintenance plugin for Bukkit so I'll do the maximum of myself to make frequent updates and add a maximum of features.
 
-*Current version: 1.03*
+*Current version: 1.04*
 
 
 ##**Check out [this] (https://github.com/JeremGamer/Maintenance-Manager--CB-Plugin/wiki/Download) page for downloads!**##
@@ -54,11 +54,13 @@ For the moment, it provides several exclusivities I havn't found anywhere else. 
 
 ##Permissions:
 
+maintenance.*: Give access to all MaintenanceManager commands.
+
 maintenance.maintenance: Allows to start or stop a maintenance.
 
 maintenance.maintenance.cancel: Allows to cancel a scheduled maintenance.
 
-maintenance.maintenance.backup: Allows to use the /maintenance backup command.
+maintenance.backup: Allows to use the /maintenance backup command.
 
 maintenance.access: Allows to enter the server during maintenance mode (and don't be kicked when the maintenance begin)
 
@@ -70,7 +72,7 @@ maintenance.cpu: Allows to perform /cpu command.
 
 maintenance.ram: Allows to perform /ram command.
 
-Of course, OP players have these permissions. Caution: *maintenance.** doesn't work!
+Of course, OP players have these permissions.
 
 
 ##Configuration:
@@ -103,6 +105,7 @@ pluginEnabled: "\xa7a\xa7osuccessfully enabled!" //Displayed when you enable a p
 maintenanceAlreadyLaunched: "\xa7cThe server is already in maintenance mode." //Displayed when /maintenance on is performed during a maintenance.
 noMaintenanceLaunched: "\xa7cMaintenance mode is already off." //Displayed when /maintenance off is performed when the maintenance mode is off.
 maintenanceAlreadyScheduled: "\xa7cA maintenance is already scheduled."
+loginMessage: "\xa76\xa7o\xa7lThe server is currently in maintenance mode!"
 cpuUsage: "\xa73CPU used at\xa72\xa7l" //Followed by the CPU usage percentage.
 ramUsage: "\xa73RAM used at\xa72\xa7l" //Followed by the RAM usage. (Format: "x% || yMB")
 maxPlayersOnMaintenance: 10 //Must be an integer! The number of slots available during a maintenance
