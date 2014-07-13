@@ -1,7 +1,9 @@
 package io.github.jeremgamer.maintenance;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,6 +34,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.plugin.Plugin;
@@ -65,6 +69,38 @@ public final class Maintenance extends JavaPlugin implements Listener {
     Plugin pluginToDisable;
     SmokeDetector sd = new SmokeDetector(this);
     File icon;
+    boolean isUpToDate = true;
+    private final String downloadAdress = "http://goo.gl/NE9nUz";
+	String version = null;
+    
+    URL u;
+    InputStream is = null;
+    DataInputStream dis;
+    String s;
+    
+    @SuppressWarnings("deprecation")
+	public void checkUpdate () {
+    	try {
+
+    		u = new URL("https://github.com/JeremGamer/Maintenance-Manager--CB-Plugin/blob/master/RELEASE_MANIFEST.version"); 
+    		is = u.openStream();
+    		dis = new DataInputStream(new BufferedInputStream(is));
+
+				while ((s = dis.readLine()) != null) {
+					if (s.contains("1.")) {
+						version = s.substring(0 , s.indexOf("1.") + 4);
+						version = version.substring(version.indexOf("1.") , version.indexOf("1.") + 4);
+						if (!version.equals(this.getDescription().getVersion())) {					
+							getLogger().info("MaintenanceManager isn't up to date! Get the " + version + " version here: " + downloadAdress);
+							isUpToDate = false;
+						}
+							break;
+						}	
+					}	
+		} catch (IOException e) {
+			getLogger().severe(e.getMessage());
+		}
+    }
     
     
     @SuppressWarnings("static-access")
@@ -111,6 +147,8 @@ public final class Maintenance extends JavaPlugin implements Listener {
 				e.printStackTrace();
 			}
 		}
+		
+		checkUpdate();
     }
  
 
@@ -195,6 +233,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     				BufferedReader bw = new BufferedReader(isr);
 					for (int i = 0; i < 14 ; i++) {
 						str += bw.readLine() + "\n";
+						str = str.replaceAll("&", "§");
 					}
 					sender.sendMessage(str);
 					return true;
@@ -318,7 +357,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     					sender.sendMessage( getConfig().getString("noMaintenanceScheduled") );
     				}
     				return true;
-    			} else if (args[0].equalsIgnoreCase( "backup" ) && sender.hasPermission( "maintenance.maintenance.backup" )) {
+    			} else if (args[0].equalsIgnoreCase( "backup" ) && sender.hasPermission( "maintenance.backup" )) {
     			
 					t4 = new Thread(new backup(sender));
 					t4.start();    	           	          
@@ -354,11 +393,25 @@ public final class Maintenance extends JavaPlugin implements Listener {
     public void onLogin (final PlayerLoginEvent event) {
     	Player player = event.getPlayer();
     	if (maintenanceTime == true && !player.hasPermission("maintenance.acess")) {    		
-    			event.disallow( org.bukkit.event.player.PlayerLoginEvent.Result.KICK_OTHER, getConfig().getString("maintenanceMessage") );
-    			return;
-    	} else if (maintenanceTime == true && player.hasPermission( "maintenance.acess" )) {
-    			event.allow();
+    		event.disallow( org.bukkit.event.player.PlayerLoginEvent.Result.KICK_OTHER, getConfig().getString("maintenanceMessage") );
+    		return;
+    	} else if (maintenanceTime == true && player.hasPermission( "maintenance.access" )) {
+    		event.allow();
     	}
+    	
+    }
+    
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onJoin (final PlayerJoinEvent event) {
+    	Player player = event.getPlayer();
+    	if (maintenanceTime == true) 
+    		player.sendMessage( getConfig().getString("loginMessage") );
+    	
+    	if (isUpToDate == false && player.isOp()) {
+    		player.sendMessage("§c§lYour MaintenanceManager is outdated! \n§6§oGet the latest version here: §e§n" + downloadAdress);
+
+    	}
+    	
     }
     
     public class MaintenanceSchedule extends BukkitRunnable {
@@ -456,7 +509,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			getConfig().getString("maxPlayerDuringMaintenance");
+
 			try{
 				maxPlayer = Integer.parseInt( getConfig().getString("maxPlayersOnMaintenance") );
 				event.setMaxPlayers( maxPlayer );
