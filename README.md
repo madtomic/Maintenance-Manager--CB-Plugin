@@ -4,7 +4,7 @@
 **Maintenance Manager is the ultimate maintenance plugin which makes maintenances times on your server way easier!**
 For the moment, it provides several exclusivities I havn't found anywhere else. It is very simple to use and to configure (even if the configuration is optionnal). I want to make it the best maintenance plugin for Bukkit so I'll do the maximum of myself to make frequent updates and add a maximum of features.
 
-*Current version: 1.04*
+*Current version: 1.10*
 
 
 ##**Check out [this] (https://github.com/JeremGamer/Maintenance-Manager--CB-Plugin/wiki/Download) page for downloads!**##
@@ -31,6 +31,7 @@ For the moment, it provides several exclusivities I havn't found anywhere else. 
 - Check the server hardware at any time with /cpu and /ram!
 - Aliases on /maintenance command. See the Commands section for further informations. 
 - Backups on command.
+- And more!
 
 ##Commands:
 
@@ -80,36 +81,119 @@ Of course, OP players have these permissions.
 By default, the config file looks like this:
 
 ```
-maintenanceModeOnStart: false //Don't touch this line!
-remainingMilliseconds: 0 //Don't touch this line!
-kickMessage: "\xa7c\xa7nThe server is currently under maintenance. Come back later." //Displayed to players kicked by MaintenanceManager.
-maintenanceMessage: "\xa7c\xa7nThe server is currently under maintenance. Come back\
-  \ later." //Displayed to players who attempt to connect during a maintenance and who havn't the permission to connect.
-maintenanceMOTD: "\xa76\xa7o\xa7lMaintenance mode..." //The motd displayed on the multiplayer screen during a maintenance.
-maintenanceWithDurationMOTDBegin: "\xa76\xa7o\xa7lMaintenance mode...\xa72\xa7l" //The first line of the motd when the maintenance has a duration planned
-maintenanceWithDurationMOTDEnd: "\xa7r\xa7eminutes remaining!" //The second line of the motd when the maintenance has a duration planned. Follows the number of minutes remaining.
-maintenanceWithDurationMOTDLessThanOneMinute: "\xa72Less than one minute remaining!"  //The second line of the motd when the maintenance has a duration planned and there is less than one minute remaining.
-maintenanceStart: "\xa72\xa7o\xa7lMaintenance time!" //Broadcast displayed at the beginning of a maintenance.
-maintenanceEnd: "\xa76\xa7o\xa7lMaintenance finished!" //Broadcast displayed at the end of a maintenance.
-scheduleMessageBegin: "\xa75\xa7oMaintenance in\xa7r\xa74\xa7l" //The begin of the schedule message, the time value follows in the code...
-scheduleMessageEnd: "\xa7r\xa75\xa7ominutes!" //The end of the schedule message.
-scheduleCanceled: "\xa7a\xa7oThe scheduled maintenance have been canceled!" //Displays in a broadcast when a maintenance is canceled.
-noMaintenanceScheduled: "\xa7cNo maintenance scheduled..." //Displays when /maintenance cancel is performed while no maintenance is scheduled.
-scheduleLessThanOneMinute: "\xa75\xa7oMaintenance in less than one minute!" //Schedule message when the maintenance will begin in less than one minute
-inputErrorSchedule: "\xa7cThe time value for schedule must be an integer!" //Error message for wrong input
-inputErrorDuration: "\xa7cThe time value for duration must be an integer!" //Error message for wrong input
-pluginManagementArgumentErrorDisable: "\xa7cPlease name the plugin you want to disable!" //Error message for wrong input
-pluginManagementArgumentErrorEnable: "\xa7cPlease name the plugin you want to enable!" //Error message for wrong input
-pluginDisabled: "\xa7a\xa7osuccessfully disabled!" //Displayed when you disable a plugin. The plugin name will be just before it, no space needed.
-pluginEnabled: "\xa7a\xa7osuccessfully enabled!" //Displayed when you enable a plugin. The plugin name will be just before it, no space needed.
-maintenanceAlreadyLaunched: "\xa7cThe server is already in maintenance mode." //Displayed when /maintenance on is performed during a maintenance.
-noMaintenanceLaunched: "\xa7cMaintenance mode is already off." //Displayed when /maintenance off is performed when the maintenance mode is off.
-maintenanceAlreadyScheduled: "\xa7cA maintenance is already scheduled."
-loginMessage: "\xa76\xa7o\xa7lThe server is currently in maintenance mode!"
-cpuUsage: "\xa73CPU used at\xa72\xa7l" //Followed by the CPU usage percentage.
-ramUsage: "\xa73RAM used at\xa72\xa7l" //Followed by the RAM usage. (Format: "x% || yMB")
-maxPlayersOnMaintenance: 10 //Must be an integer! The number of slots available during a maintenance
-disabledPlugins: [] //Take care when you modify the list!
+#---------- MAINTENANCEMANAGER CONFIGURATION ----------#
+maintenanceModeOnStart: false
+remainingMilliseconds: 0
+maxPlayersOnMaintenance: 10
+disabledPlugins: []
+
+#----------------------# 
+#General messages      #
+#----------------------#
+maintenanceStart: '&2&o&lMaintenance time!'
+
+maintenanceEnd: '&6&o&lMaintenance finished!'
+
+maintenanceMessage: '&c&nThe server is currently under maintenance. Come back later.'
+
+kickMessage: '&c&nThe server is currently under maintenance. Come back later.'
+
+loginMessage: '&6&o&lThe server is currently in maintenance mode!'
+
+cpuUsage: '&3CPU used at&2&l <cpu>%'
+
+ramUsage: '&3RAM used at &2&l<ram%>% || <ram> MB'
+
+#----------------------------------------------------# 
+#----------------------------------------------------# 
+
+
+#----------------------# 
+#MOTD related          #
+#----------------------#
+maintenanceMOTD: '&6&o&lMaintenance mode...'
+
+maintenanceWithDurationMOTD: '&6&o&lMaintenance mode...<n>&2&l<minutes> &r&eminutes
+  remaining!'
+
+maintenanceWithDurationMOTDLessThanOneMinute: '&6&o&lMaintenance mode...<n>&2Less
+  than one minute remaining!'
+
+
+#----------------------------------------------------# 
+#----------------------------------------------------# 
+
+
+#----------------------# 
+#Schedule related      #
+#----------------------#
+scheduleMessage: '&5&oMaintenance in &4&l<minutes> &5&ominutes!'
+
+scheduleCanceled: '&a&oThe scheduled maintenance have been canceled!'
+
+scheduleLessThanOneMinute: '&5&oMaintenance in less than one minute!'
+
+
+#----------------------------------------------------# 
+#----------------------------------------------------# 
+
+
+#----------------------# 
+#Plugins management    #
+#----------------------#
+pluginDisabled: '&6&l<plugin> &a&osuccessfully disabled!'
+
+pluginEnabled: '&6&l<plugin> &a&osuccessfully enabled!'
+
+
+#----------------------------------------------------# 
+#----------------------------------------------------# 
+
+
+#----------------------# 
+#Backup related        #
+#----------------------#
+backingUpMessage: '&e&oBacking up. The server will lag brievely.'
+
+backupSuccess: '&2&o&lBackup success!'
+
+
+#----------------------------------------------------# 
+#----------------------------------------------------# 
+
+
+#----------------------# 
+#"Already" messages    #
+#----------------------#
+maintenanceAlreadyLaunched: '&cThe server is already in maintenance mode.'
+
+noMaintenanceLaunched: '&cMaintenance mode is already off.'
+
+noMaintenanceScheduled: '&cNo maintenance scheduled...'
+
+maintenanceAlreadyScheduled: '&cA maintenance is already scheduled.'
+
+alreadyBackingUp: '&cPlease wait the end of this backup before backing up again!'
+
+
+#----------------------------------------------------# 
+#----------------------------------------------------# 
+
+
+#----------------------# 
+#Error messages        #
+#----------------------#
+inputErrorSchedule: '&cThe time value for schedule must be an integer!'
+
+inputErrorDuration: '&cThe time value for duration must be an integer!'
+
+pluginManagementArgumentErrorDisable: '&cPlease name the plugin you want to disable!'
+
+pluginManagementArgumentErrorEnable: '&cPlease name the plugin you want to enable!'
+
+
+#----------------------------------------------------# 
+#----------------------------------------------------# 
 ```
 
 
@@ -117,6 +201,7 @@ To set your custom icon for maintenances, just put an image named maintenance-ic
 *Note: Your icon must be a 64X64 png image!*
 
 Advice: If you don't want to change the icon, copy-paste server-icon.png and rename it into maintenance-icon.png
+Comments will disappear after the first use of commands. Edit it the first time you launch the plugin.
 
 **Important: If your server is running without icon, maintenance-icon.png will be displayed even out of a maintenance!**
 
