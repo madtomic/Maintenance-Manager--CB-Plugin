@@ -1,3 +1,26 @@
+/*
+ The MIT License (MIT)
+
+Copyright (c) 2014 JeremGamer
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.*/
+
 package io.github.jeremgamer.maintenance;
 
 import java.awt.image.BufferedImage;
@@ -27,7 +50,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -48,7 +70,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
 	
 	PluginManager pm = Bukkit.getPluginManager();
 	
-    boolean maintenanceTime = false;
+    static boolean maintenanceTime = false;
     int schedule;
     long scheduleM;
     String scheduleArgument;
@@ -62,21 +84,50 @@ public final class Maintenance extends JavaPlugin implements Listener {
     int maxPlayer;
     String scheduleMessageBegin;
     String scheduleMessageEnd;
-    boolean durationEnabled = false;
-    long remainingMilliseconds;
-    boolean scheduleEnabled = false;
+    static boolean durationEnabled = false;
+    static long remainingMilliseconds;
+    static boolean scheduleEnabled = false;
     List<String> disabledPlugins;
     Plugin pluginToDisable;
     SmokeDetector sd = new SmokeDetector(this);
     File icon;
+    CachedServerIcon maintenanceIcon;
     boolean isUpToDate = true;
     private final String downloadAdress = "http://goo.gl/NE9nUz";
 	String version = null;
+	boolean backingUp = false;
+	public SimpleConfigManager manager;
+	public SimpleConfig config;
     
     URL u;
     InputStream is = null;
     DataInputStream dis;
     String s;
+    
+    public static boolean isOn(){
+    	return maintenanceTime;
+    }
+    
+    public static boolean isDurationPlanned() {
+    	return durationEnabled;
+    }
+    
+    public static boolean isMaintenanceScheduled() {
+    	return scheduleEnabled;
+    }
+    
+    public static long getRemainingMilliseconds() {
+    	return remainingMilliseconds;
+    }    
+    
+    public Plugin getPluginIgnoreCase(final String pluginName) {
+        for(final Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
+            if(plugin.getName().equalsIgnoreCase(pluginName)) {
+                return plugin;
+            }
+        }
+        return null;
+    }
     
     @SuppressWarnings("deprecation")
 	public void checkUpdate () {
@@ -108,10 +159,10 @@ public final class Maintenance extends JavaPlugin implements Listener {
     public void onEnable() {
     	getServer().getPluginManager().registerEvents(this, this);
     	File configFile = new File(this.getDataFolder(), "config.yml");
-    	if (!configFile.exists()) { 
+    	if (!configFile.exists()) {
         this.saveDefaultConfig();
     	}
-    	getConfig();
+    	getConfig().options().header("---------- MAINTENANCEMANAGER CONFIGURATION ----------#").copyHeader(true);
     	maintenanceTime = getConfig().getBoolean("maintenanceModeOnStart");
     	remainingMilliseconds = getConfig().getLong("remainingMilliseconds");
     	if (remainingMilliseconds != 0) {
@@ -147,6 +198,14 @@ public final class Maintenance extends JavaPlugin implements Listener {
 				e.printStackTrace();
 			}
 		}
+		icon = new File( new File("").getAbsolutePath() + "/maintenance-icon.png" );
+		BufferedImage maintenanceImage;
+		try {
+			maintenanceImage = ImageIO.read(icon);
+			maintenanceIcon = Bukkit.getServer().loadServerIcon(maintenanceImage);
+		} catch (Exception e) {
+			getLogger().severe(e.getMessage());
+		}
 		
 		checkUpdate();
     }
@@ -157,7 +216,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     	if (durationEnabled == true) {
 			t2.interrupt();
     	}
-    	getConfig();
+    	getConfig(); 
     	this.saveConfig();
     }
 	
@@ -216,9 +275,53 @@ public final class Maintenance extends JavaPlugin implements Listener {
     			iae.printStackTrace();
     		}
 				
-    			sender.sendMessage("§2§o§lBackup success!");
-    			getLogger().info("§2§o§lBackup success!");
+    			sender.sendMessage( getConfig().getString("backupSuccess").replaceAll("&", "§") );
+    			getLogger().info("Backup success!");
 		}
+    
+    
+    
+    public void normalMaintenance(CommandSender sender) {
+		if (!scheduleEnabled == true) {
+			maintenanceTime = true;
+			this.getConfig().set("maintenanceModeOnStart", true);	 
+			saveConfig();
+			Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceStart").replaceAll("&", "§") );
+			} else {
+				sender.sendMessage( getConfig().getString("maintenanceAlreadyScheduled").replaceAll("&", "§") );
+			}
+    }
+    
+    public void scheduledMaintenance(CommandSender sender , String scheduleTime) {
+		if (!scheduleEnabled == true) {
+		scheduleArgument = scheduleTime;
+		scheduleEnabled = true;
+		t = new Thread(new MaintenanceSchedule(sender));
+		t.start();
+		} else {
+			sender.sendMessage( getConfig().getString("maintenanceAlreadyScheduled").replaceAll("&", "§") );
+		}
+    }
+    
+    public void maintenanceWithDuration(CommandSender sender , String scheduleTime , String duration) {
+		if (!scheduleEnabled == true) {
+			try {
+				remainingMilliseconds = Long.parseLong(duration) * 60 * 1000;
+				scheduleArgument = scheduleTime;
+				scheduleEnabled = true;
+				t = new Thread(new MaintenanceSchedule(sender));
+				durationEnabled = true;
+
+				t2 = new Thread(new MaintenanceDuration(sender));
+				t.start();
+				
+			} catch (NumberFormatException e){
+				sender.sendMessage( getConfig().getString("inputErrorDuration").replaceAll("&", "§") );
+			}
+		} else {
+			sender.sendMessage( getConfig().getString("maintenanceAlreadyScheduled").replaceAll("&", "§") );
+		}
+    }
     	
 
     @Override
@@ -247,54 +350,24 @@ public final class Maintenance extends JavaPlugin implements Listener {
     			if ( maintenanceTime == false ) {
     				
     				if ( args.length == 1 ) {
-    					if (!scheduleEnabled == true) {
-            			maintenanceTime = true;
-            			this.getConfig().set("maintenanceModeOnStart", true);
-            			saveConfig();
-            			Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceStart") );
-    					} else {
-    						sender.sendMessage( getConfig().getString("maintenanceAlreadyScheduled") );
-    					}
+    					normalMaintenance(sender);
     				}
     				
-    				if (args.length == 2) {
-    					if (!scheduleEnabled == true) {
-    					scheduleArgument = args[1];
-    					scheduleEnabled = true;
-    					t = new Thread(new MaintenanceSchedule(sender));
-    					t.start();
-    					} else {
-    						sender.sendMessage( getConfig().getString("maintenanceAlreadyScheduled") );
-    					}
+    				else if (args.length == 2) {
+    					scheduledMaintenance(sender , args[1]);
     					return true;
         	        	} 
-    				if (args.length == 3) {
-    					if (!scheduleEnabled == true) {
-        					try {
-        						remainingMilliseconds = Long.parseLong(args[2]) * 60 * 1000;
-        						scheduleArgument = args[1];
-        						scheduleEnabled = true;
-        						t = new Thread(new MaintenanceSchedule(sender));
-        						durationEnabled = true;
-
-        						t2 = new Thread(new MaintenanceDuration(sender));
-        						t.start();
-        						
-        					} catch (NumberFormatException e){
-        						sender.sendMessage( getConfig().getString("inputErrorDuration") );
-        					}
-    					} else {
-    						sender.sendMessage( getConfig().getString("maintenanceAlreadyScheduled") );
-    					}
+    				else if (args.length == 3) {
+    					maintenanceWithDuration(sender , args[1] , args[2]);
     					return true;
     				}
     				for (Player player: Bukkit.getServer().getOnlinePlayers()) {
     					if ( !player.hasPermission( "maintenance.access" ) || !player.isOp() ) {
-    						player.kickPlayer( getConfig().getString("kickMessage") );
+    						player.kickPlayer( getConfig().getString("kickMessage").replaceAll("&", "§").replaceAll("<n>", "\n") );
     					}
     				}
     			} else {
-    				sender.sendMessage( getConfig().getString("maintenanceAlreadyLaunched") );
+    				sender.sendMessage( getConfig().getString("maintenanceAlreadyLaunched").replaceAll("&", "§") );
     			}
     				return true;
     			} else if (args[0].equalsIgnoreCase( "off" ) && sender.hasPermission( "maintenance.maintenance")) {
@@ -304,57 +377,65 @@ public final class Maintenance extends JavaPlugin implements Listener {
     						durationEnabled = false;
         					maintenanceTime = false;
         					this.getConfig().set("maintenanceModeOnStart", false);
-        					Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceEnd") );
+        					Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceEnd").replaceAll("&", "§") );                	 
         					saveConfig();
     			    	} else {
     					maintenanceTime = false;
-    					this.getConfig().set("maintenanceModeOnStart", false);
+    					this.getConfig().set("maintenanceModeOnStart", false);            	 
     					saveConfig();
-    					Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceEnd") );
+    					Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceEnd").replaceAll("&", "§") );
     			    	}
     				} else {
-    					sender.sendMessage( getConfig().getString("noMaintenanceLaunched") );
+    					sender.sendMessage( getConfig().getString("noMaintenanceLaunched").replaceAll("&", "§") );
     				}
     				return true;
     			} else if (args[0].equalsIgnoreCase( "reload" ) && sender.hasPermission( "maintenance.reload")) {
     				this.reloadConfig();
+    				icon = new File( new File("").getAbsolutePath() + "/maintenance-icon.png" );
+    				BufferedImage maintenanceImage;
+    				try {
+    					maintenanceImage = ImageIO.read(icon);
+    					maintenanceIcon = Bukkit.getServer().loadServerIcon(maintenanceImage);
+    				} catch (Exception e) {
+    					getLogger().severe(e.getMessage());
+    				}
+    				checkUpdate();
+    		    	if (isUpToDate == false && sender.isOp()) {
+    		    		sender.sendMessage("§c§lYour MaintenanceManager is outdated! \n§6§oGet the latest version here: §e§n" + downloadAdress);
+    		    	}
     				sender.sendMessage( "§2§oMaintenanceManager config reloaded!" );
     				return true;
     			} else if (args[0].equalsIgnoreCase( "disable" ) && sender.hasPermission( "maintenance.manage.plugins")) {
     				if (args.length == 2) {
-    					pluginName = args[1];
-    					plugin = pm.getPlugin(pluginName);
-    					pm.disablePlugin(plugin);
+    					pluginName = getPluginIgnoreCase(args[1]).getName();
+    					pm.disablePlugin(getPluginIgnoreCase(args[1]));
     					disabledPlugins.add(pluginName);
-    					getConfig().set("disabledPlugins", disabledPlugins);
+    					getConfig().set("disabledPlugins", disabledPlugins);            	 
             			saveConfig();
-    					pluginName = pluginName + " ";
-    					sender.sendMessage( ChatColor.GOLD + "§l" + pluginName + ChatColor.RESET + getConfig().getString("pluginDisabled") );
+    					sender.sendMessage( getConfig().getString("pluginDisabled").replaceAll("&", "§").replaceAll("<plugin>", pluginName) );
     				} else {
-    					sender.sendMessage( getConfig().getString("pluginManagementArgumentErrorDisable") );
+    					sender.sendMessage( getConfig().getString("pluginManagementArgumentErrorDisable").replaceAll("&", "§") );
     				}
     				return true;
     			} else if (args[0].equalsIgnoreCase( "enable" ) && sender.hasPermission( "maintenance.manage.plugins")) {
     				if (args.length == 2) {
-    					pluginName = args[1];
-    					plugin = pm.getPlugin(pluginName);
-    					pm.enablePlugin(plugin);
+    					pluginName = getPluginIgnoreCase(args[1]).getName();
+    					pm.enablePlugin(getPluginIgnoreCase(args[1]));
     					disabledPlugins.remove(pluginName);
-    					getConfig().set("disabledPlugins", disabledPlugins);
+    					getConfig().set("disabledPlugins", disabledPlugins);            	 
             			saveConfig();
-    					pluginName = pluginName + " ";
-    					sender.sendMessage( ChatColor.GOLD +  "§l" + pluginName + ChatColor.RESET + getConfig().getString("pluginEnabled") );
+    					sender.sendMessage( getConfig().getString("pluginEnabled").replaceAll("&", "§").replaceAll("<plugin>", pluginName) );
     				} else {
-    					sender.sendMessage( getConfig().getString("pluginManagementArgumentErrorEnable") );
+    					sender.sendMessage( getConfig().getString("pluginManagementArgumentErrorEnable").replaceAll("&", "§") );
     				}
     				return true;
     			} else if (args[0].equalsIgnoreCase( "cancel" ) && sender.hasPermission( "mainteance.maintenance.cancel" )) {
     				if (scheduleEnabled == true) {
     					t.interrupt();
     					scheduleEnabled = false;
-    					Bukkit.getServer().broadcastMessage( getConfig().getString("scheduleCanceled") );
+    					Bukkit.getServer().broadcastMessage( getConfig().getString("scheduleCanceled").replaceAll("&", "§") );
     				} else {
-    					sender.sendMessage( getConfig().getString("noMaintenanceScheduled") );
+    					sender.sendMessage( getConfig().getString("noMaintenanceScheduled").replaceAll("&", "§") );
     				}
     				return true;
     			} else if (args[0].equalsIgnoreCase( "backup" ) && sender.hasPermission( "maintenance.backup" )) {
@@ -369,7 +450,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     	
     	if (cmd.getName().equalsIgnoreCase( "cpu" ) && sender.hasPermission("maintenance.cpu")) { 
     		try {
-				sender.sendMessage( getConfig().getString("cpuUsage") + " " + SmokeDetector.getCpuUsage() + "%");
+				sender.sendMessage( getConfig().getString("cpuUsage").replaceAll("&", "§").replaceAll("<cpu>", String.valueOf(SmokeDetector.getCpuUsage())));
 			} catch (SigarException e) {
 				getLogger().warning(e.getMessage());
 			}
@@ -378,7 +459,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     	
     	if (cmd.getName().equalsIgnoreCase( "ram" ) && sender.hasPermission("maintenance.ram")) { 
 			try {
-				sender.sendMessage( getConfig().getString("ramUsage") + " " + SmokeDetector.getMemUsagePercent() + "% || " + SmokeDetector.getMemUsage() + "MB");
+				sender.sendMessage( getConfig().getString("ramUsage").replaceAll("&", "§").replaceAll("<ram%>", String.valueOf(SmokeDetector.getMemUsagePercent())).replaceAll("<ram>", String.valueOf(SmokeDetector.getMemUsage())));
 			} catch (SigarException e) {
 				getLogger().warning(e.getMessage());
 			}
@@ -393,7 +474,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     public void onLogin (final PlayerLoginEvent event) {
     	Player player = event.getPlayer();
     	if (maintenanceTime == true && !player.hasPermission("maintenance.acess")) {    		
-    		event.disallow( org.bukkit.event.player.PlayerLoginEvent.Result.KICK_OTHER, getConfig().getString("maintenanceMessage") );
+    		event.disallow( org.bukkit.event.player.PlayerLoginEvent.Result.KICK_OTHER, getConfig().getString("maintenanceMessage").replaceAll("&", "§") );
     		return;
     	} else if (maintenanceTime == true && player.hasPermission( "maintenance.access" )) {
     		event.allow();
@@ -405,11 +486,10 @@ public final class Maintenance extends JavaPlugin implements Listener {
     public void onJoin (final PlayerJoinEvent event) {
     	Player player = event.getPlayer();
     	if (maintenanceTime == true) 
-    		player.sendMessage( getConfig().getString("loginMessage") );
+    		player.sendMessage( getConfig().getString("loginMessage").replaceAll("&", "§") );
     	
     	if (isUpToDate == false && player.isOp()) {
     		player.sendMessage("§c§lYour MaintenanceManager is outdated! \n§6§oGet the latest version here: §e§n" + downloadAdress);
-
     	}
     	
     }
@@ -425,19 +505,18 @@ public final class Maintenance extends JavaPlugin implements Listener {
         @SuppressWarnings("static-access")
 		@Override
         public void run() {
-        	scheduleMessageBegin = getConfig().getString("scheduleMessageBegin") + " ";
-        	scheduleMessageEnd =  " " + getConfig().getString("scheduleMessageEnd");
+
         	try{
         		schedule = Integer.parseInt(scheduleArgument);
         		if (schedule != 0 || schedule > 0) {
-        			Bukkit.getServer().broadcastMessage( scheduleMessageBegin + schedule + scheduleMessageEnd);
+        			Bukkit.getServer().broadcastMessage( getConfig().getString("scheduleMessage").replaceAll("&", "§").replaceAll("<minutes>", String.valueOf(schedule)) );
         			scheduleM = Integer.parseInt(scheduleArgument) * 60 * 1000;
         			try {
         				t.sleep(scheduleM / 2);
             			if (schedule / 2 == 0) {
-            				Bukkit.getServer().broadcastMessage( getConfig().getString("scheduleLessThanOneMinute") );
+            				Bukkit.getServer().broadcastMessage( getConfig().getString("scheduleLessThanOneMinute").replaceAll("&", "§") );
             			} else {
-            				Bukkit.getServer().broadcastMessage( scheduleMessageBegin + schedule / 2 + scheduleMessageEnd);
+            				Bukkit.getServer().broadcastMessage( getConfig().getString("scheduleMessage").replaceAll("&", "§").replaceAll("<minutes>", String.valueOf(schedule / 2)) );
             			}
         			} catch (InterruptedException e) {
         				t.interrupt();
@@ -446,12 +525,12 @@ public final class Maintenance extends JavaPlugin implements Listener {
         				t.sleep(scheduleM / 2);
             			scheduleEnabled = false;
             			maintenanceTime = true;
-            			getConfig().set("maintenanceModeOnStart", true);
+            			getConfig().set("maintenanceModeOnStart", true);            	  
             			saveConfig();
-            			Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceStart") );
+            			Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceStart").replaceAll("&", "§") );
                 		for (Player player: Bukkit.getServer().getOnlinePlayers()) {
                 			if ( !player.hasPermission( "maintenance.access" ) || !player.isOp() ) {
-                				player.kickPlayer( getConfig().getString("kickMessage") );;
+                				player.kickPlayer( getConfig().getString("kickMessage").replaceAll("&", "§") );;
                 			}
                 		}
                 		if (remainingMilliseconds != 0) {
@@ -459,7 +538,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
     					durationEnabled = true;
                 		}
     					maintenanceTime = true;
-    					getConfig().set("maintenanceModeOnStart", true);
+    					getConfig().set("maintenanceModeOnStart", true);            	 
     					saveConfig();
         			} catch (InterruptedException e) {
         				t.interrupt();
@@ -467,15 +546,15 @@ public final class Maintenance extends JavaPlugin implements Listener {
         	} else if (schedule <= 0) {
     			scheduleEnabled = false;
     			maintenanceTime = true;
-    			getConfig().set("maintenanceModeOnStart", true);
+    			getConfig().set("maintenanceModeOnStart", true);    	 
     			saveConfig();
-    			Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceStart") );
+    			Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceStart").replaceAll("&", "§") );
     			if (remainingMilliseconds != 0) {
     			t2.start();
     			}
         	}
     		} catch (NumberFormatException e){
-    			sender.sendMessage( getConfig().getString("inputErrorSchedule") );
+    			sender.sendMessage( getConfig().getString("inputErrorSchedule").replaceAll("&", "§") );
     		}    
         }
     }
@@ -484,26 +563,20 @@ public final class Maintenance extends JavaPlugin implements Listener {
     public void MaintenanceListPing (final ServerListPingEvent event) {
     	if ( maintenanceTime == true ) {
     		if (durationEnabled == true ) {
-    			String motdDurationEnd = " " + getConfig().getString("maintenanceWithDurationMOTDEnd");
     			try {
     				if (remainingMilliseconds / 60 / 1000 < 1) {
-        				event.setMotd( getConfig().getString("maintenanceWithDurationMOTDBegin") + "\n" + getConfig().getString("maintenanceWithDurationMOTDLessThanOneMinute") );
+        				event.setMotd( getConfig().getString("maintenanceWithDurationMOTDLessThanOneMinute").replaceAll("&", "§").replaceAll("<n>", "\n"));
     				} else {
-    					event.setMotd( getConfig().getString("maintenanceWithDurationMOTDBegin") + "\n" + remainingMilliseconds / 60 / 1000 + motdDurationEnd );
+    					event.setMotd( getConfig().getString("maintenanceWithDurationMOTD").replaceAll("&", "§").replaceAll("<n>", "\n").replaceAll("<minutes>", String.valueOf(remainingMilliseconds / 60 / 1000)));
     				}
     			} catch (NumberFormatException e){
-    				getLogger().info(getConfig().getString("inputErrorDuration"));
+    				getLogger().info(getConfig().getString("inputErrorDuration").replaceAll("&", "§"));
     			}
     		} else {
-        		event.setMotd( getConfig().getString("maintenanceMOTD") );
+        		event.setMotd( getConfig().getString("maintenanceMOTD").replaceAll("&", "§").replaceAll("<n>", "\n") );
     		}
 			try {
-				icon = new File( new File("").getAbsolutePath() + "/maintenance-icon.png" );
-				BufferedImage maintenanceImage = ImageIO.read(icon);
-				CachedServerIcon maintenanceIcon = Bukkit.getServer().loadServerIcon(maintenanceImage);
 	    		event.setServerIcon(maintenanceIcon); 
-			} catch (IOException e) {
-				e.printStackTrace();
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
@@ -511,7 +584,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
 			}
 
 			try{
-				maxPlayer = Integer.parseInt( getConfig().getString("maxPlayersOnMaintenance") );
+				maxPlayer = Integer.parseInt( getConfig().getString("maxPlayersOnMaintenance").replaceAll("&", "§") );
 				event.setMaxPlayers( maxPlayer );
 			} catch (NumberFormatException e){
 				e.printStackTrace();
@@ -534,7 +607,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
         		long i2 = remainingMilliseconds;
         		for (long i = i2; i >= 0 ; i--) {
         			remainingMilliseconds--;
-        			getConfig().set( "remainingMilliseconds" , i);
+        			getConfig().set( "remainingMilliseconds" , i);        	 
         			saveConfig();
                 	try {
         				t2.sleep(1);
@@ -543,8 +616,8 @@ public final class Maintenance extends JavaPlugin implements Listener {
                 			getConfig().set("maintenanceModeOnStart", false);
                 			maintenanceTime = false;
                 			remainingMilliseconds = 0;
-                        	Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceEnd") );
-                			getConfig().set( "remainingMilliseconds" , remainingMilliseconds);
+                        	Bukkit.getServer().broadcastMessage( getConfig().getString("maintenanceEnd").replaceAll("&", "§") );
+                			getConfig().set( "remainingMilliseconds" , remainingMilliseconds);                	 
                 			saveConfig();
                     		}
         			} catch (InterruptedException e) {
@@ -552,7 +625,7 @@ public final class Maintenance extends JavaPlugin implements Listener {
         			}
         		}
         	} catch (NumberFormatException e){
-    			sender.sendMessage( getConfig().getString("inputErrorDuration") );
+    			sender.sendMessage( getConfig().getString("inputErrorDuration").replaceAll("&", "§") );
         	}
         }
     }
@@ -589,6 +662,8 @@ public final class Maintenance extends JavaPlugin implements Listener {
 		@Override
 		public void run() {
 
+			if (backingUp == false) {
+				backingUp = true;
 			String folderPath = new File("").getAbsolutePath() + "/backups/";
 			File folder = new File(folderPath);
 			if (!folder.exists()) {
@@ -599,8 +674,8 @@ public final class Maintenance extends JavaPlugin implements Listener {
 				}
 			}
   		
-            sender.sendMessage("§e§oBacking up. The server will lag brievely.");
-            getLogger().info("§e§oBacking up. The server will lag brievely.");
+            getServer().broadcastMessage( getConfig().getString("backingUpMessage").replaceAll("&", "§") );
+            getLogger().info("Backing up...");
             
             
             getServer().dispatchCommand(getServer().getConsoleSender(), "save-all");
@@ -609,7 +684,10 @@ public final class Maintenance extends JavaPlugin implements Listener {
 	        backupProcess(sender);
             
 	        getServer().dispatchCommand(getServer().getConsoleSender(), "save-on");
-			
+	        backingUp = false;
+			} else {
+				sender.sendMessage( getConfig().getString("alreadyBackingUp").replaceAll("&", "§") );
+			}
 		}
     	
     }
