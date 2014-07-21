@@ -141,9 +141,17 @@ public final class Maintenance extends JavaPlugin implements Listener {
 					if (s.contains("1.")) {
 						version = s.substring(0 , s.indexOf("1.") + 4);
 						version = version.substring(version.indexOf("1.") , version.indexOf("1.") + 4);
-						if (!version.equals(this.getDescription().getVersion())) {					
+						if (!version.equals(this.getDescription().getVersion())) {	
+							if (version.endsWith("<")) {
+								version = version.replace("<", "");
+								if (!version.equals(this.getDescription().getVersion())) {
+									getLogger().info("MaintenanceManager isn't up to date! Get the " + version + " version here: " + downloadAdress);
+									isUpToDate = false;
+								}
+							} else {
 							getLogger().info("MaintenanceManager isn't up to date! Get the " + version + " version here: " + downloadAdress);
 							isUpToDate = false;
+							}
 						}
 							break;
 						}	
@@ -152,7 +160,6 @@ public final class Maintenance extends JavaPlugin implements Listener {
 			getLogger().severe(e.getMessage());
 		}
     }
-    
     
     @SuppressWarnings("static-access")
 	@Override
