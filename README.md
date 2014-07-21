@@ -200,12 +200,12 @@ pluginManagementArgumentErrorEnable: '&cPlease name the plugin you want to enabl
 To set your custom icon for maintenances, just put an image named maintenance-icon.png in the main folder of your server. The default one auto-creates if the plugins doesn't find any maintenance-icon.png in that folder.
 *Note: Your icon must be a 64X64 png image!*
 
-Advice: If you don't want to change the icon, copy-paste server-icon.png and rename it into maintenance-icon.png
+Advice: If you don't want to change the icon, copy-paste server-icon.png and rename it into maintenance-icon.png.
 Comments will disappear after the first use of commands. Edit it the first time you launch the plugin.
 
 **Important: If your server is running without icon, maintenance-icon.png will be displayed even out of a maintenance!**
 
-To add colors to your texts, just put '§' and a character from 0-9 and a-f before the words you want to color. Please refer you to this page to know formatting codes: http://minecraft.gamepedia.com/Formatting_codes
+To add colors to your texts, just put '§' or '&' and a character from 0-9 and a-f before the words you want to color. Please refer you to this page to know formatting codes: http://minecraft.gamepedia.com/Formatting_codes
 
 
 ##Setup
