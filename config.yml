@@ -1,30 +1,113 @@
+#---------- MAINTENANCEMANAGER CONFIGURATION ----------#
 maintenanceModeOnStart: false
 remainingMilliseconds: 0
-kickMessage: "\xa7c\xa7nThe server is currently under maintenance. Come back later."
-maintenanceMessage: "\xa7c\xa7nThe server is currently under maintenance. Come back\
-  \ later."
-maintenanceMOTD: "\xa76\xa7o\xa7lMaintenance mode..."
-maintenanceWithDurationMOTDBegin: "\xa76\xa7o\xa7lMaintenance mode...\xa72\xa7l"
-maintenanceWithDurationMOTDEnd: "\xa7r\xa7eminutes remaining!"
-maintenanceWithDurationMOTDLessThanOneMinute: "\xa72Less than one minute remaining!"
-maintenanceStart: "\xa72\xa7o\xa7lMaintenance time!"
-maintenanceEnd: "\xa76\xa7o\xa7lMaintenance finished!"
-scheduleMessageBegin: "\xa75\xa7oMaintenance in\xa7r\xa74\xa7l"
-scheduleMessageEnd: "\xa7r\xa75\xa7ominutes!"
-scheduleCanceled: "\xa7a\xa7oThe scheduled maintenance have been canceled!"
-noMaintenanceScheduled: "\xa7cNo maintenance scheduled..."
-scheduleLessThanOneMinute: "\xa75\xa7oMaintenance in less than one minute!"
-inputErrorSchedule: "\xa7cThe time value for schedule must be an integer!"
-inputErrorDuration: "\xa7cThe time value for duration must be an integer!"
-pluginManagementArgumentErrorDisable: "\xa7cPlease name the plugin you want to disable!"
-pluginManagementArgumentErrorEnable: "\xa7cPlease name the plugin you want to enable!"
-pluginDisabled: "\xa7a\xa7osuccessfully disabled!"
-pluginEnabled: "\xa7a\xa7osuccessfully enabled!"
-maintenanceAlreadyLaunched: "\xa7cThe server is already in maintenance mode."
-noMaintenanceLaunched: "\xa7cMaintenance mode is already off."
-maintenanceAlreadyScheduled: "\xa7cA maintenance is already scheduled."
-loginMessage: "\xa76\xa7o\xa7lThe server is currently in maintenance mode!"
-cpuUsage: "\xa73CPU used at\xa72\xa7l"
-ramUsage: "\xa73RAM used at\xa72\xa7l"
 maxPlayersOnMaintenance: 10
 disabledPlugins: []
+
+#----------------------# 
+#General messages      #
+#----------------------#
+maintenanceStart: '&2&o&lMaintenance time!'
+
+maintenanceEnd: '&6&o&lMaintenance finished!'
+
+maintenanceMessage: '&c&nThe server is currently under maintenance. Come back later.'
+
+kickMessage: '&c&nThe server is currently under maintenance. Come back later.'
+
+loginMessage: '&6&o&lThe server is currently in maintenance mode!'
+
+cpuUsage: '&3CPU used at&2&l <cpu>%'
+
+ramUsage: '&3RAM used at &2&l<ram%>% || <ram> MB'
+
+#----------------------------------------------------# 
+#----------------------------------------------------# 
+
+
+#----------------------# 
+#MOTD related          #
+#----------------------#
+maintenanceMOTD: '&6&o&lMaintenance mode...'
+
+maintenanceWithDurationMOTD: '&6&o&lMaintenance mode...<n>&2&l<minutes> &r&eminutes
+  remaining!'
+
+maintenanceWithDurationMOTDLessThanOneMinute: '&6&o&lMaintenance mode...<n>&2Less
+  than one minute remaining!'
+
+
+#----------------------------------------------------# 
+#----------------------------------------------------# 
+
+
+#----------------------# 
+#Schedule related      #
+#----------------------#
+scheduleMessage: '&5&oMaintenance in &4&l<minutes> &5&ominutes!'
+
+scheduleCanceled: '&a&oThe scheduled maintenance have been canceled!'
+
+scheduleLessThanOneMinute: '&5&oMaintenance in less than one minute!'
+
+
+#----------------------------------------------------# 
+#----------------------------------------------------# 
+
+
+#----------------------# 
+#Plugins management    #
+#----------------------#
+pluginDisabled: '&6&l<plugin> &a&osuccessfully disabled!'
+
+pluginEnabled: '&6&l<plugin> &a&osuccessfully enabled!'
+
+
+#----------------------------------------------------# 
+#----------------------------------------------------# 
+
+
+#----------------------# 
+#Backup related        #
+#----------------------#
+backingUpMessage: '&e&oBacking up. The server will lag brievely.'
+
+backupSuccess: '&2&o&lBackup success!'
+
+
+#----------------------------------------------------# 
+#----------------------------------------------------# 
+
+
+#----------------------# 
+#"Already" messages    #
+#----------------------#
+maintenanceAlreadyLaunched: '&cThe server is already in maintenance mode.'
+
+noMaintenanceLaunched: '&cMaintenance mode is already off.'
+
+noMaintenanceScheduled: '&cNo maintenance scheduled...'
+
+maintenanceAlreadyScheduled: '&cA maintenance is already scheduled.'
+
+alreadyBackingUp: '&cPlease wait the end of this backup before backing up again!'
+
+
+#----------------------------------------------------# 
+#----------------------------------------------------# 
+
+
+#----------------------# 
+#Error messages        #
+#----------------------#
+inputErrorSchedule: '&cThe time value for schedule must be an integer!'
+
+inputErrorDuration: '&cThe time value for duration must be an integer!'
+
+pluginManagementArgumentErrorDisable: '&cPlease name the plugin you want to disable!'
+
+pluginManagementArgumentErrorEnable: '&cPlease name the plugin you want to enable!'
+
+
+#----------------------------------------------------# 
+#----------------------------------------------------# 
